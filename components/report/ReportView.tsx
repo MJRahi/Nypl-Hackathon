@@ -58,11 +58,9 @@ function isBuildingReport(value: unknown): value is BuildingReport {
 
 interface ReportViewProps {
   bbl: string;
-  /** Dev passthrough for the API's `?mock=clean` fixture. No-ops once real data lands. */
-  mock: string | null;
 }
 
-export function ReportView({ bbl, mock }: ReportViewProps) {
+export function ReportView({ bbl }: ReportViewProps) {
   const [state, setState] = useState<State>({ kind: 'loading' });
   const [attempt, setAttempt] = useState(0);
 
@@ -76,10 +74,7 @@ export function ReportView({ bbl, mock }: ReportViewProps) {
 
     void (async () => {
       try {
-        const query = new URLSearchParams({ bbl });
-        if (mock) query.set('mock', mock);
-
-        const response = await fetch(`/api/building?${query.toString()}`, {
+        const response = await fetch(`/api/building?bbl=${encodeURIComponent(bbl)}`, {
           signal: controller.signal,
         });
         const payload: unknown = await response.json().catch(() => null);
@@ -117,7 +112,7 @@ export function ReportView({ bbl, mock }: ReportViewProps) {
     })();
 
     return () => controller.abort();
-  }, [bbl, mock, attempt]);
+  }, [bbl, attempt]);
 
   if (state.kind === 'loading') return <ReportSkeleton />;
   if (state.kind === 'notFound') return <NoRecordsState bbl={bbl} />;

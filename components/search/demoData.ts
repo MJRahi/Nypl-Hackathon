@@ -1,14 +1,14 @@
 /**
  * Tappable demo buildings for the landing page. Judges will click these, so every
- * BBL here must be a real one we can actually render.
+ * BBL here must be one the real pipeline can actually resolve.
  *
- * These two are the BBLs backing the committed fixtures in /lib. Adding a third is
- * a one-line change — drop in `{ label, sublabel, href: '/building/<real bbl>' }`
- * once we have another verified address. Do not invent a BBL to fill the slot;
- * a fabricated city identifier on the demo strip undermines the whole premise.
+ * Each BBL below was resolved through /api/geocode and then confirmed against
+ * /api/building on the live pipeline, and each label is the address the report
+ * itself renders — so the button text and the report header always agree.
  *
- * The `?mock=clean` flag is the API's documented dev affordance for the grade-A
- * fixture. It no-ops once the real BBL lookup lands, so the link stays correct.
+ * Deliberately spans the grade scale and three boroughs: F, C, A. Do not swap a
+ * BBL in here without re-checking it end to end; an unresolvable BBL renders the
+ * "no records" state, which reads as good news and silently ruins the demo.
  */
 export interface DemoAddress {
   label: string;
@@ -18,13 +18,18 @@ export interface DemoAddress {
 
 export const DEMO_ADDRESSES: DemoAddress[] = [
   {
-    label: '1520 Sheridan Avenue',
+    label: '1510 Sheridan Avenue',
     sublabel: 'Bronx, NY 10457',
-    href: '/building/2028130037',
+    href: '/building/2028190005',
   },
   {
-    label: '310 East 70th Street',
+    label: '627 Manhattan Avenue',
+    sublabel: 'Brooklyn, NY 11222',
+    href: '/building/3026460001',
+  },
+  {
+    label: '310 East 70 Street',
     sublabel: 'Manhattan, NY 10021',
-    href: '/building/1014050028?mock=clean',
+    href: '/building/1014440043',
   },
 ];
