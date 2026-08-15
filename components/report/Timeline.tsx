@@ -53,7 +53,14 @@ function EventRow({ event, label }: { event: TimelineEvent; label: string }) {
         </span>
       </div>
 
-      <p className="mt-2 text-sm leading-relaxed text-slate-900">{event.description}</p>
+      {/*
+        Live HPD text is uppercase and runs to ~300 characters, which reads as a
+        shouting wall on a phone. Clamped for scanning; the full verbatim text is
+        always one tap away in "See the raw records", which stays unaltered.
+      */}
+      <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate-900">
+        {event.description}
+      </p>
       <p className="mt-1 text-xs text-slate-500">{label}</p>
     </li>
   );

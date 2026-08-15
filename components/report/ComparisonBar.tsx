@@ -69,7 +69,11 @@ export function ComparisonBar({ buildingRate, cityMedian }: ComparisonBarProps) 
         </div>
       </div>
 
-      {ratio !== null ? (
+      {buildingRate === 0 ? (
+        <p className="mt-4 text-sm leading-relaxed text-slate-600">
+          No HPD complaints filed here in the last 24 months.
+        </p>
+      ) : ratio !== null ? (
         <p className="mt-4 text-sm leading-relaxed text-slate-600">
           {above ? (
             <>
