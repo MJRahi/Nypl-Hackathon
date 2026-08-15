@@ -13,8 +13,11 @@
  * numbers, and a Staten Island lot with no PLUTO unit count.
  */
 
+import { access } from 'node:fs/promises';
+import path from 'node:path';
 import { geocodeAddress } from '@/lib/nyc/geocode';
 import { loadBuildingReport } from '@/lib/nyc/report';
+import { DEMO_ADDRESSES } from '@/components/search/demoData';
 import type { BuildingReport } from '@/lib/types';
 
 const DEFAULT_CASES: [address: string, why: string][] = [
@@ -71,12 +74,37 @@ function check(report: BuildingReport): string[] {
   return problems;
 }
 
+/**
+ * Every tappable demo building must have a committed fixture, or that button
+ * hits the network live on stage. This is the check that catches a demo BBL
+ * being added without a matching `npm run warm-cache` run.
+ */
+async function checkDemoCoverage(): Promise<number> {
+  console.log('Demo fixture coverage');
+  let missing = 0;
+
+  for (const demo of DEMO_ADDRESSES) {
+    const bbl = demo.href.split('/').pop() ?? '';
+    const fixture = path.join(process.cwd(), 'public', 'demo', `${bbl}.json`);
+    try {
+      await access(fixture);
+      console.log(`  ${bbl}  ${demo.label} — fixture committed`);
+    } catch {
+      missing += 1;
+      console.log(
+        `  ${bbl}  ${demo.label} — NO FIXTURE. Run: npm run warm-cache -- --bbl ${bbl}`,
+      );
+    }
+  }
+  return missing;
+}
+
 async function main(): Promise<void> {
   const custom = process.argv.slice(2);
   const cases: [string, string][] =
     custom.length > 0 ? custom.map((a) => [a, 'user supplied']) : DEFAULT_CASES;
 
-  let failed = 0;
+  let failed = custom.length === 0 ? await checkDemoCoverage() : 0;
 
   for (const [address, why] of cases) {
     console.log(`\n${address}  (${why})`);

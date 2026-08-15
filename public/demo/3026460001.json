@@ -1,0 +1,403 @@
+{
+  "address": "627 Manhattan Avenue, Brooklyn, NY 11222",
+  "bbl": "3026460001",
+  "bin": "3066069",
+  "borough": "Brooklyn",
+  "lat": 40.7238214,
+  "lng": -73.9510718,
+  "unitCount": 4,
+  "yearBuilt": 1931,
+  "grade": "C",
+  "score": 60,
+  "stats": {
+    "hpdComplaintsAllTime": 8,
+    "hpdComplaints24mo": 0,
+    "openViolations": 24,
+    "closedViolations": 11,
+    "classCViolations": 3,
+    "dobComplaints24mo": 1,
+    "complaintsPerUnitPerYear": 0,
+    "cityMedianPerUnitPerYear": 0.28
+  },
+  "categories": [
+    {
+      "key": "heat_hot_water",
+      "label": "Heat & Hot Water",
+      "count24mo": 0,
+      "countAllTime": 8,
+      "openCount": 1,
+      "severity": "medium"
+    },
+    {
+      "key": "plumbing",
+      "label": "Plumbing & Leaks",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 2,
+      "severity": "medium"
+    },
+    {
+      "key": "pests",
+      "label": "Pests & Vermin",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 6,
+      "severity": "high"
+    },
+    {
+      "key": "electrical",
+      "label": "Electrical",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 0,
+      "severity": "low"
+    },
+    {
+      "key": "structural",
+      "label": "Structural & Surfaces",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 8,
+      "severity": "high"
+    },
+    {
+      "key": "elevator",
+      "label": "Elevator",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 0,
+      "severity": "low"
+    },
+    {
+      "key": "safety",
+      "label": "Fire & Safety",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 2,
+      "severity": "medium"
+    },
+    {
+      "key": "other",
+      "label": "Other",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 5,
+      "severity": "high"
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-05-05",
+      "source": "HPD_VIOLATION",
+      "category": "pests",
+      "status": "open",
+      "description": "(A) § HMC:FILE ANNUAL BEDBUG REPORT IN ACCORDANCE WITH HPD RULE AS DESCRIBED ON THE BACK OF THIS NOTICE OF VIOLATION OR AS DESCRIBED ON HPD\u001aS WEBSITE, WWW.NYC.GOV\\HPD, SEARCH BED BUGS.",
+      "className": "A"
+    },
+    {
+      "date": "2026-02-20",
+      "source": "DOB_COMPLAINT",
+      "category": "other",
+      "status": "closed",
+      "description": "DOB complaint (category 59)",
+      "className": null
+    },
+    {
+      "date": "2025-06-10",
+      "source": "HPD_VIOLATION",
+      "category": "pests",
+      "status": "open",
+      "description": "(A) § HMC:FILE ANNUAL BEDBUG REPORT IN ACCORDANCE WITH HPD RULE AS DESCRIBED ON THE BACK OF THIS NOTICE OF VIOLATION OR AS DESCRIBED ON HPD\u001aS WEBSITE, WWW.NYC.GOV\\HPD, SEARCH BED BUGS.",
+      "className": "A"
+    },
+    {
+      "date": "2024-04-10",
+      "source": "HPD_VIOLATION",
+      "category": "pests",
+      "status": "open",
+      "description": "(A) § HMC:FILE ANNUAL BEDBUG REPORT IN ACCORDANCE WITH HPD RULE AS DESCRIBED ON THE BACK OF THIS NOTICE OF VIOLATION OR AS DESCRIBED ON HPD\u001aS WEBSITE, WWW.NYC.GOV\\HPD, SEARCH BED BUGS.",
+      "className": "A"
+    },
+    {
+      "date": "2023-03-23",
+      "source": "HPD_VIOLATION",
+      "category": "pests",
+      "status": "open",
+      "description": "(A) § HMC:FILE ANNUAL BEDBUG REPORT IN ACCORDANCE WITH HPD RULE AS DESCRIBED ON THE BACK OF THIS NOTICE OF VIOLATION OR AS DESCRIBED ON HPD\u001aS WEBSITE, WWW.NYC.GOV\\HPD, SEARCH BED BUGS.",
+      "className": "A"
+    },
+    {
+      "date": "2022-02-25",
+      "source": "HPD_VIOLATION",
+      "category": "pests",
+      "status": "open",
+      "description": "(A) § HMC:FILE ANNUAL BEDBUG REPORT IN ACCORDANCE WITH HPD RULE AS DESCRIBED ON THE BACK OF THIS NOTICE OF VIOLATION OR AS DESCRIBED ON HPD\u001aS WEBSITE, WWW.NYC.GOV\\HPD, SEARCH BED BUGS.",
+      "className": "A"
+    },
+    {
+      "date": "2021-11-22",
+      "source": "HPD_VIOLATION",
+      "category": "structural",
+      "status": "open",
+      "description": "POST AND MAINTAIN A PROPER SIGN ON WALL OF ENTRANCE STORY SHOWING THE REGISTRATION NUMBER ASSIGNED BY THE DEPARTMENT AND THE ADDRESS OF THE BUILDING. AT PUBLIC HALL, 1st STORY",
+      "className": "A"
+    },
+    {
+      "date": "2021-11-22",
+      "source": "HPD_VIOLATION",
+      "category": "structural",
+      "status": "open",
+      "description": "ADMIN. CODE: POST AND MAINTAIN A PROPER NOTICE ON WALL OF THE ENTRANCE STORY IN ENGLISH AND SPANISH ON THE AVAILABILITY OF THE AGENCY\u001aS HOUSING INFORMATION GUIDE. A SAMPLE NOTICE CAN BE FOUND AT WWW.NYC.GOV/HPD. AT PUBLIC HALL, 1st STORY",
+      "className": "A"
+    },
+    {
+      "date": "2021-11-22",
+      "source": "HPD_VIOLATION",
+      "category": "structural",
+      "status": "open",
+      "description": ", M/D LAW AND DEPT. RULES AND REGS. PROVIDE A COMPLETED CERTIFICATE OF INSPECTION VISITS IN A PROPER FRAME READILY ACCESSIBLE FOR SIGNATURE, BOTTOM EDGE OF FRAME BETWEEN 48-62 INCHES ABOVE FLOOR AT THAD IS MISSING AT PUBLIC HALL, 1st STORY",
+      "className": "A"
+    },
+    {
+      "date": "2021-11-22",
+      "source": "HPD_VIOLATION",
+      "category": "other",
+      "status": "open",
+      "description": "POST A PROPER NOTICE OF SMOKE DETECTOR REQUIREMENTS, IN A FORM APPROVED BY THE COMMISSIONER, AT OR NEAR THE MAIL BOX AT PUBLIC HALL, 1st STORY",
+      "className": "A"
+    },
+    {
+      "date": "2021-11-22",
+      "source": "HPD_VIOLATION",
+      "category": "safety",
+      "status": "open",
+      "description": "HMC: POST A PROPER NOTICE OF CARBON MONOXIDE DETECTING DEVICE REQUIREMENTS, IN A FORM APPROVED BY THE COMMISSIONER, IN A COMMON AREA OF A CLASS A MULTIPLE DWELLING NEAR INSPECTION CERTIFICATE OR PROVIDE NOTICE TO TENANTS IN A PRIVATE DWELLING.",
+      "className": "A"
+    },
+    {
+      "date": "2021-11-22",
+      "source": "HPD_VIOLATION",
+      "category": "plumbing",
+      "status": "open",
+      "description": "HMC: POST, IN A FORM APPROVED BY THE COMMISSIONER, AND MAINTAIN A NOTICE IN A COMMON AREA OF THE BUILDING REGARDING THE PROCEDURES THAT SHOULD BE FOLLOWED WHEN A GAS LEAK IS SUSPECTED AT PUBLIC HALL, 1st STORY",
+      "className": "A"
+    },
+    {
+      "date": "2021-11-22",
+      "source": "HPD_VIOLATION",
+      "category": "other",
+      "status": "open",
+      "description": "POST NOTICE, IN FORM APPROVED BY THE DEPARTMENT, STATING THE NAME AND LOCATION OF THE PERSON DESIGNATED BY THE OWNER TO HAVE KEY TO BUILDINGS HEATING SYSTEM THAT IS MISSING AT PUBLIC HALL, 1st STORY",
+      "className": "C"
+    },
+    {
+      "date": "2021-11-22",
+      "source": "HPD_VIOLATION",
+      "category": "structural",
+      "status": "open",
+      "description": "POST SIGN ON WALL OF ENTRANCE STORY BEARING NAME, ADDRESS INCLUDING APARTMENT NUMBER IF ANY, AND TELEPHONE NUMBER OF SUPERINTENDENT, JANITOR OR HOUSEKEEPER. AT PUBLIC HALL, 1st STORY",
+      "className": "A"
+    },
+    {
+      "date": "2021-11-20",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heat/Hot Water — No Heat",
+      "className": null
+    },
+    {
+      "date": "2021-11-17",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heat/Hot Water — No Heat",
+      "className": null
+    },
+    {
+      "date": "2021-11-17",
+      "source": "HPD_VIOLATION",
+      "category": "heat_hot_water",
+      "status": "open",
+      "description": "PROVIDE READY ACCESS TO BUILDINGS HEATING SYSTEM LOCKED AT CELLAR AT BOILER ROOM",
+      "className": "C"
+    },
+    {
+      "date": "2021-11-17",
+      "source": "HPD_VIOLATION",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "PROVIDE AN ADEQUATE SUPPLY OF HEAT FOR THE APARTMENT IN THE ENTIRE APARTMENT LOCATED AT APT A, 2nd STORY, 1st APARTMENT FROM EAST AT SOUTH",
+      "className": "C"
+    },
+    {
+      "date": "2021-11-15",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heat/Hot Water — No Heat",
+      "className": null
+    },
+    {
+      "date": "2021-11-15",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heat/Hot Water — No Heat",
+      "className": null
+    },
+    {
+      "date": "2021-11-15",
+      "source": "HPD_VIOLATION",
+      "category": "other",
+      "status": "open",
+      "description": "POST NOTICE, IN FORM APPROVED BY THE DEPARTMENT, STATING THE NAME AND LOCATION OF THE PERSON DESIGNATED BY THE OWNER TO HAVE KEY TO BUILDINGS HEATING SYSTEM MISSING AT PUBLIC HALL, 1st STORY",
+      "className": "C"
+    },
+    {
+      "date": "2021-11-06",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heat/Hot Water — No Heat",
+      "className": null
+    },
+    {
+      "date": "2021-09-13",
+      "source": "HPD_VIOLATION",
+      "category": "safety",
+      "status": "open",
+      "description": "HMC: POST A PROPER NOTICE OF CARBON MONOXIDE DETECTING DEVICE REQUIREMENTS, IN A FORM APPROVED BY THE COMMISSIONER, IN A COMMON AREA OF A CLASS A MULTIPLE DWELLING NEAR INSPECTION CERTIFICATE OR PROVIDE NOTICE TO TENANTS IN A PRIVATE DWELLING.",
+      "className": "A"
+    },
+    {
+      "date": "2021-09-13",
+      "source": "HPD_VIOLATION",
+      "category": "structural",
+      "status": "open",
+      "description": "POST AND MAINTAIN A PROPER SIGN ON WALL OF ENTRANCE STORY SHOWING THE REGISTRATION NUMBER ASSIGNED BY THE DEPARTMENT AND THE ADDRESS OF THE BUILDING. AT PUBLIC HALL, 1st STORY",
+      "className": "A"
+    },
+    {
+      "date": "2021-09-13",
+      "source": "HPD_VIOLATION",
+      "category": "structural",
+      "status": "open",
+      "description": "ADMIN. CODE: POST AND MAINTAIN A PROPER NOTICE ON WALL OF THE ENTRANCE STORY IN ENGLISH AND SPANISH ON THE AVAILABILITY OF THE AGENCY\u001aS HOUSING INFORMATION GUIDE. A SAMPLE NOTICE CAN BE FOUND AT WWW.NYC.GOV/HPD. AT PUBLIC HALL, 1st STORY",
+      "className": "A"
+    },
+    {
+      "date": "2021-09-13",
+      "source": "HPD_VIOLATION",
+      "category": "plumbing",
+      "status": "open",
+      "description": "HMC: POST, IN A FORM APPROVED BY THE COMMISSIONER, AND MAINTAIN A NOTICE IN A COMMON AREA OF THE BUILDING REGARDING THE PROCEDURES THAT SHOULD BE FOLLOWED WHEN A GAS LEAK IS SUSPECTED",
+      "className": "A"
+    },
+    {
+      "date": "2021-09-13",
+      "source": "HPD_VIOLATION",
+      "category": "other",
+      "status": "open",
+      "description": "POST A PROPER NOTICE OF SMOKE DETECTOR REQUIREMENTS, IN A FORM APPROVED BY THE COMMISSIONER, AT OR NEAR THE MAIL BOX .. AT PUBLIC HALL, 1st STORY",
+      "className": "A"
+    },
+    {
+      "date": "2021-09-13",
+      "source": "HPD_VIOLATION",
+      "category": "structural",
+      "status": "open",
+      "description": ", M/D LAW AND DEPT. RULES AND REGS. PROVIDE A COMPLETED CERTIFICATE OF INSPECTION VISITS IN A PROPER FRAME AT OR NEAR MAILBOXES, BOTTOM EDGE OF FRAME BETWEEN 48-62 INCHES ABOVE FLOOR .. AT PUBLIC HALL, 1st STORY",
+      "className": "A"
+    },
+    {
+      "date": "2021-09-07",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heat/Hot Water — No Hot Water",
+      "className": null
+    },
+    {
+      "date": "2021-04-12",
+      "source": "HPD_VIOLATION",
+      "category": "pests",
+      "status": "open",
+      "description": "(A) § HMC:FILE ANNUAL BEDBUG REPORT IN ACCORDANCE WITH HPD RULE AS DESCRIBED ON THE BACK OF THIS NOTICE OF VIOLATION OR AS DESCRIBED ON HPD\u001aS WEBSITE, WWW.NYC.GOV\\HPD, SEARCH BED BUGS.",
+      "className": "A"
+    },
+    {
+      "date": "2010-02-06",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heating — No Heat",
+      "className": null
+    },
+    {
+      "date": "2008-05-12",
+      "source": "HPD_VIOLATION",
+      "category": "structural",
+      "status": "open",
+      "description": "SECTION 27-2005 ADM CODE PROPERLY REPAIR WITH SIMILAR MATERIAL THE BROKEN OR DEFECTIVE SOUTH STACCO EXTERIOR WALL OF BUILDING,AT 1ST AND 2ND STORY.",
+      "className": "B"
+    },
+    {
+      "date": "2005-01-27",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heating — No Heat& Hot Water",
+      "className": null
+    }
+  ],
+  "bedbug": {
+    "reported": false,
+    "infestedUnits": null,
+    "year": null
+  },
+  "narrative": null,
+  "dataAsOf": "2026-08-15T20:30:39.422Z",
+  "dataQuality": {
+    "unitCountKnown": true,
+    "matchedBin": true,
+    "warnings": []
+  },
+  "sources": [
+    {
+      "name": "Housing Maintenance Code Complaints and Problems",
+      "datasetId": "ygpa-z7cr",
+      "url": "https://data.cityofnewyork.us/resource/ygpa-z7cr.json"
+    },
+    {
+      "name": "Housing Maintenance Code Violations",
+      "datasetId": "wvxf-dwi5",
+      "url": "https://data.cityofnewyork.us/resource/wvxf-dwi5.json"
+    },
+    {
+      "name": "DOB Complaints Received",
+      "datasetId": "eabe-havv",
+      "url": "https://data.cityofnewyork.us/resource/eabe-havv.json"
+    },
+    {
+      "name": "DOB Violations",
+      "datasetId": "3h2n-5cm9",
+      "url": "https://data.cityofnewyork.us/resource/3h2n-5cm9.json"
+    },
+    {
+      "name": "Bedbug Reporting",
+      "datasetId": "wz6d-d3jb",
+      "url": "https://data.cityofnewyork.us/resource/wz6d-d3jb.json"
+    },
+    {
+      "name": "Multiple Dwelling Registrations",
+      "datasetId": "tesw-yqqr",
+      "url": "https://data.cityofnewyork.us/resource/tesw-yqqr.json"
+    },
+    {
+      "name": "Primary Land Use Tax Lot Output (PLUTO)",
+      "datasetId": "64uk-42ks",
+      "url": "https://data.cityofnewyork.us/resource/64uk-42ks.json"
+    }
+  ]
+}
