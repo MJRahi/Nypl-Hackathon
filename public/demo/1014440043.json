@@ -1,0 +1,187 @@
+{
+  "address": "310 East 70 Street, Manhattan, NY 10021",
+  "bbl": "1014440043",
+  "bin": "1044830",
+  "borough": "Manhattan",
+  "lat": 40.7670378,
+  "lng": -73.9588234,
+  "unitCount": 135,
+  "yearBuilt": 1959,
+  "grade": "A",
+  "score": 100,
+  "stats": {
+    "hpdComplaintsAllTime": 6,
+    "hpdComplaints24mo": 0,
+    "openViolations": 0,
+    "closedViolations": 0,
+    "classCViolations": 0,
+    "dobComplaints24mo": 0,
+    "complaintsPerUnitPerYear": 0,
+    "cityMedianPerUnitPerYear": 0.28
+  },
+  "categories": [
+    {
+      "key": "heat_hot_water",
+      "label": "Heat & Hot Water",
+      "count24mo": 0,
+      "countAllTime": 3,
+      "openCount": 0,
+      "severity": "low"
+    },
+    {
+      "key": "plumbing",
+      "label": "Plumbing & Leaks",
+      "count24mo": 0,
+      "countAllTime": 1,
+      "openCount": 0,
+      "severity": "low"
+    },
+    {
+      "key": "pests",
+      "label": "Pests & Vermin",
+      "count24mo": 0,
+      "countAllTime": 1,
+      "openCount": 0,
+      "severity": "low"
+    },
+    {
+      "key": "electrical",
+      "label": "Electrical",
+      "count24mo": 0,
+      "countAllTime": 1,
+      "openCount": 0,
+      "severity": "low"
+    },
+    {
+      "key": "structural",
+      "label": "Structural & Surfaces",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 0,
+      "severity": "low"
+    },
+    {
+      "key": "elevator",
+      "label": "Elevator",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 0,
+      "severity": "low"
+    },
+    {
+      "key": "safety",
+      "label": "Fire & Safety",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 0,
+      "severity": "low"
+    },
+    {
+      "key": "other",
+      "label": "Other",
+      "count24mo": 0,
+      "countAllTime": 0,
+      "openCount": 0,
+      "severity": "low"
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2024-06-23",
+      "source": "HPD_COMPLAINT",
+      "category": "electrical",
+      "status": "closed",
+      "description": "Electric — Entire Building",
+      "className": null
+    },
+    {
+      "date": "2023-12-13",
+      "source": "HPD_COMPLAINT",
+      "category": "plumbing",
+      "status": "closed",
+      "description": "Water Leak — At Wall Or Ceiling",
+      "className": null
+    },
+    {
+      "date": "2023-01-18",
+      "source": "HPD_COMPLAINT",
+      "category": "pests",
+      "status": "closed",
+      "description": "Unsanitary Condition — Mice",
+      "className": null
+    },
+    {
+      "date": "2015-10-17",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heat/Hot Water — No Heat",
+      "className": null
+    },
+    {
+      "date": "2014-10-31",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heat/Hot Water — No Heat",
+      "className": null
+    },
+    {
+      "date": "2009-12-07",
+      "source": "HPD_COMPLAINT",
+      "category": "heat_hot_water",
+      "status": "closed",
+      "description": "Heating — No Heat",
+      "className": null
+    }
+  ],
+  "bedbug": {
+    "reported": false,
+    "infestedUnits": null,
+    "year": null
+  },
+  "narrative": null,
+  "dataAsOf": "2026-08-15T20:19:53.965Z",
+  "dataQuality": {
+    "unitCountKnown": true,
+    "matchedBin": true,
+    "warnings": []
+  },
+  "sources": [
+    {
+      "name": "Housing Maintenance Code Complaints and Problems",
+      "datasetId": "ygpa-z7cr",
+      "url": "https://data.cityofnewyork.us/resource/ygpa-z7cr.json"
+    },
+    {
+      "name": "Housing Maintenance Code Violations",
+      "datasetId": "wvxf-dwi5",
+      "url": "https://data.cityofnewyork.us/resource/wvxf-dwi5.json"
+    },
+    {
+      "name": "DOB Complaints Received",
+      "datasetId": "eabe-havv",
+      "url": "https://data.cityofnewyork.us/resource/eabe-havv.json"
+    },
+    {
+      "name": "DOB Violations",
+      "datasetId": "3h2n-5cm9",
+      "url": "https://data.cityofnewyork.us/resource/3h2n-5cm9.json"
+    },
+    {
+      "name": "Bedbug Reporting",
+      "datasetId": "wz6d-d3jb",
+      "url": "https://data.cityofnewyork.us/resource/wz6d-d3jb.json"
+    },
+    {
+      "name": "Multiple Dwelling Registrations",
+      "datasetId": "tesw-yqqr",
+      "url": "https://data.cityofnewyork.us/resource/tesw-yqqr.json"
+    },
+    {
+      "name": "Primary Land Use Tax Lot Output (PLUTO)",
+      "datasetId": "64uk-42ks",
+      "url": "https://data.cityofnewyork.us/resource/64uk-42ks.json"
+    }
+  ]
+}
