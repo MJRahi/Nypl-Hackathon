@@ -31,9 +31,22 @@ export interface AddressCandidate {
 export interface CategoryStat {
   key: Category;
   label: string;
+  /**
+   * Complaints in the last 24 months that mentioned this category.
+   *
+   * These OVERLAP and do not partition the total: one HPD complaint can raise
+   * problems in several categories at once, and is counted in each. Summing
+   * count24mo across categories therefore exceeds stats.hpdComplaints24mo —
+   * on real buildings by up to ~1.7x. Never render these as parts of a whole.
+   */
   count24mo: number;
+  /** Complaints all time that mentioned this category. Overlaps, as above. */
   countAllTime: number;
-  /** Open HPD violations in this category. */
+  /**
+   * Open HPD violations in this category. Unlike the complaint counts, each
+   * violation lands in exactly one category, so these DO sum to
+   * stats.openViolations.
+   */
   openCount: number;
   severity: Severity;
 }

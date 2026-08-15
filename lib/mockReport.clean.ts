@@ -45,8 +45,8 @@ export const mockReportClean: BuildingReport = {
     {
       key: 'plumbing',
       label: 'Plumbing & Leaks',
-      count24mo: 1,
-      countAllTime: 3,
+      count24mo: 2,
+      countAllTime: 4,
       openCount: 0,
       severity: 'low',
     },

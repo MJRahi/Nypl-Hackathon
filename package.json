@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "warm-cache": "tsx --env-file-if-exists=.env.local --tsconfig tsconfig.json scripts/warm-cache.ts"
+    "warm-cache": "tsx --env-file-if-exists=.env.local --tsconfig tsconfig.json scripts/warm-cache.ts",
+    "smoke": "tsx --env-file-if-exists=.env.local --tsconfig tsconfig.json scripts/smoke-test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.117.1",

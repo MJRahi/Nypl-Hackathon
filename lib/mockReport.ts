@@ -12,10 +12,17 @@ import type { BuildingReport } from '@/lib/types';
  *   - 10  (bedbug reported within 2y)
  *   = 44  -> grade D
  *
- * Invariants worth preserving if you edit this: category count24mo sums to
- * stats.hpdComplaints24mo (14), countAllTime sums to hpdComplaintsAllTime (41),
- * openCount sums to stats.openViolations (11), timeline is exactly 40 events
- * sorted newest first.
+ * Invariants worth preserving if you edit this:
+ *  - openCount sums to stats.openViolations (11). Each violation classifies
+ *    into exactly one category, so this one is exact.
+ *  - category count24mo/countAllTime deliberately OVERSUM the complaint totals
+ *    (20 vs 14, and 47 vs 41). That is what real data does: one complaint can
+ *    raise problems in several categories and is counted in each. Measured on
+ *    344 E 28th St, 18 of 67 complaints spanned more than one category and the
+ *    per-category sum came to 113 against a true total of 67. Keep the
+ *    oversum here so the UI is built against reality, not against a tidier
+ *    fixture.
+ *  - timeline is exactly 40 events sorted newest first.
  */
 export const mockReport: BuildingReport = {
   address: '1520 Sheridan Avenue, Bronx, NY 10457',
@@ -50,16 +57,16 @@ export const mockReport: BuildingReport = {
     {
       key: 'plumbing',
       label: 'Plumbing & Leaks',
-      count24mo: 4,
-      countAllTime: 11,
+      count24mo: 5,
+      countAllTime: 13,
       openCount: 3,
       severity: 'high',
     },
     {
       key: 'pests',
       label: 'Pests & Vermin',
-      count24mo: 2,
-      countAllTime: 6,
+      count24mo: 3,
+      countAllTime: 7,
       openCount: 2,
       severity: 'high',
     },
@@ -74,8 +81,8 @@ export const mockReport: BuildingReport = {
     {
       key: 'structural',
       label: 'Structural & Surfaces',
-      count24mo: 1,
-      countAllTime: 2,
+      count24mo: 3,
+      countAllTime: 4,
       openCount: 1,
       severity: 'medium',
     },
@@ -98,8 +105,8 @@ export const mockReport: BuildingReport = {
     {
       key: 'other',
       label: 'Other',
-      count24mo: 0,
-      countAllTime: 1,
+      count24mo: 2,
+      countAllTime: 2,
       openCount: 0,
       severity: 'low',
     },
