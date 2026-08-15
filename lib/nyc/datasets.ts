@@ -14,7 +14,16 @@ const TIMEOUT_MS = 10_000;
 
 /** Detail-row caps. The report only ever renders 40 timeline events. */
 const TIMELINE_ROW_LIMIT = 60;
-const OPEN_VIOLATION_LIMIT = 100;
+
+/**
+ * Open violations are the one place a bounded pull can distort a published
+ * number: per-category openCount is derived from these rows, while
+ * stats.openViolations comes from a server-side count. If the cap truncates,
+ * the two disagree. 400 covers all but pathological buildings (a very bad Bronx
+ * walkup runs ~120), and truncation is reported so the caller can warn rather
+ * than quietly publish figures that don't add up.
+ */
+const OPEN_VIOLATION_LIMIT = 400;
 
 export const DATASETS = {
   /**
@@ -270,6 +279,8 @@ export interface HpdViolationsResult {
   closedTotal: number;
   open: HpdViolationRow[];
   recent: HpdViolationRow[];
+  /** True when open[] hit OPEN_VIOLATION_LIMIT and per-category counts undercount. */
+  openTruncated: boolean;
 }
 
 export interface DobComplaintsResult {
@@ -405,7 +416,15 @@ export async function fetchHpdViolations(key: BuildingKey): Promise<HpdViolation
     }
   }
 
-  return { openByClass, closedByClass, openTotal, closedTotal, open, recent };
+  return {
+    openByClass,
+    closedByClass,
+    openTotal,
+    closedTotal,
+    open,
+    recent,
+    openTruncated: open.length >= OPEN_VIOLATION_LIMIT,
+  };
 }
 
 /**
