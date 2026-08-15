@@ -1,22 +1,69 @@
 import { NextResponse } from 'next/server';
-import type { BuildingReport } from '@/lib/types';
-import { mockReport } from '@/lib/mockReport';
-import { mockReportClean } from '@/lib/mockReport.clean';
+import type { ApiError, BuildingReport } from '@/lib/types';
+import { BuildingNotFoundError, getBuildingReport } from '@/lib/nyc/report';
+import { CircuitOpenError } from '@/lib/nyc/cache';
 
 export const dynamic = 'force-dynamic';
+
+type BuildingResponse = { report: BuildingReport };
 
 /**
  * GET /api/building?bbl= -> { report: BuildingReport }
  *
- * STEP 1: returns the mock, params ignored. Real pipeline lands in steps 3-5.
- *
- * Dev affordance while the pipeline is stubbed: ?mock=clean returns the
- * grade-A fixture so the report UI can be built against both states.
- * It disappears once the real fetchers are wired.
+ * narrative is always null here; the client fills it via POST /api/narrative.
+ * Resolution order (demo file, cache, in-flight dedupe, live, stale) lives in
+ * lib/nyc/cache.ts.
  */
-export async function GET(request: Request): Promise<NextResponse<{ report: BuildingReport }>> {
+export async function GET(
+  request: Request,
+): Promise<NextResponse<BuildingResponse | ApiError>> {
   const { searchParams } = new URL(request.url);
-  const report = searchParams.get('mock') === 'clean' ? mockReportClean : mockReport;
+  const bbl = searchParams.get('bbl')?.trim() ?? '';
 
-  return NextResponse.json({ report });
+  if (!/^[1-5]\d{9}$/.test(bbl)) {
+    return NextResponse.json<ApiError>(
+      {
+        error: {
+          code: 'BAD_INPUT',
+          message: 'Query parameter "bbl" must be a 10-digit NYC BBL.',
+        },
+      },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const { report, source } = await getBuildingReport(bbl);
+    return NextResponse.json<BuildingResponse>({ report }, { headers: { 'X-Report-Source': source } });
+  } catch (cause) {
+    if (cause instanceof BuildingNotFoundError) {
+      return NextResponse.json<ApiError>(
+        { error: { code: 'NOT_FOUND', message: 'No NYC records found for that building.' } },
+        { status: 404 },
+      );
+    }
+
+    if (cause instanceof CircuitOpenError) {
+      return NextResponse.json<ApiError>(
+        {
+          error: {
+            code: 'UPSTREAM_DOWN',
+            message: 'NYC Open Data is not responding. Try again shortly.',
+          },
+        },
+        { status: 503 },
+      );
+    }
+
+    console.error('[building] report failed:', cause);
+    return NextResponse.json<ApiError>(
+      {
+        error: {
+          code: 'UPSTREAM_DOWN',
+          message: 'Could not build the report for that building right now.',
+        },
+      },
+      { status: 502 },
+    );
+  }
 }

@@ -9,6 +9,8 @@
  * Dataset IDs verified live on 2026-08-15 — see DATASETS for what changed.
  */
 
+import { CircuitOpenError, resilientFetch } from '@/lib/nyc/cache';
+
 const SOCRATA_BASE = 'https://data.cityofnewyork.us/resource';
 const TIMEOUT_MS = 10_000;
 
@@ -150,12 +152,14 @@ export async function socrataQuery<T>(
 
   let response: Response;
   try {
-    response = await fetch(url, {
+    // resilientFetch applies the 429/5xx retry schedule and the circuit breaker.
+    response = await resilientFetch(url, {
       headers: buildHeaders(),
       signal: AbortSignal.timeout(TIMEOUT_MS),
       cache: 'no-store',
     });
   } catch (cause) {
+    if (cause instanceof CircuitOpenError) throw cause;
     const reason = cause instanceof Error ? cause.message : 'unknown error';
     throw new SocrataError(datasetId, null, `request failed: ${reason}`);
   }
@@ -252,6 +256,11 @@ export interface PlutoRow {
   yearbuilt?: string;
   address?: string;
   numfloors?: string;
+  /** Two-letter borough code: MN | BX | BK | QN | SI. */
+  borough?: string;
+  zipcode?: string;
+  latitude?: string;
+  longitude?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -517,7 +526,8 @@ export async function fetchRegistration(key: BuildingKey): Promise<RegistrationR
 export async function fetchPluto(key: BuildingKey): Promise<PlutoResult> {
   const rows = await socrataQuery<PlutoRow>(DATASETS.pluto.id, {
     $where: `bbl=${key.bbl}`,
-    $select: 'bbl, unitsres, unitstotal, yearbuilt, address, numfloors',
+    $select:
+      'bbl, unitsres, unitstotal, yearbuilt, address, numfloors, borough, zipcode, latitude, longitude',
     $limit: '1',
   });
   return { lot: rows[0] ?? null };
