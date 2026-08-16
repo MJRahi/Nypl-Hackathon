@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { ApiError, MediaAnalysis } from '@/lib/types';
 import { analyzeFrames } from '@/lib/media/analyze';
+import { RateLimitedError } from '@/lib/nyc/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,6 +58,20 @@ export async function POST(
     const analysis = await analyzeFrames(frames);
     return NextResponse.json<AnalyzeMediaResponse>({ analysis });
   } catch (cause) {
+    // The stub cannot rate limit, but Person C's vision provider can.
+    if (cause instanceof RateLimitedError) {
+      const retryAfterSec = Math.max(1, Math.ceil((cause.retryAfterMs ?? 30_000) / 1000));
+      return NextResponse.json<ApiError>(
+        {
+          error: {
+            code: 'RATE_LIMITED',
+            message: 'Image analysis is rate limited. Try again in a moment.',
+          },
+        },
+        { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
+      );
+    }
+
     console.error('[analyze-media] analysis failed:', cause);
     return NextResponse.json<ApiError>(
       {

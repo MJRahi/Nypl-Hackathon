@@ -1,4 +1,5 @@
 import type { AddressCandidate } from '@/lib/types';
+import { RateLimitedError } from '@/lib/nyc/cache';
 
 const GEOSEARCH_URL = 'https://geosearch.planninglabs.nyc/v2/search';
 
@@ -130,6 +131,15 @@ export async function geocodeAddress(query: string): Promise<AddressCandidate[]>
   } catch (cause) {
     const reason = cause instanceof Error ? cause.message : 'unknown error';
     throw new GeocodeUpstreamError(`geosearch request failed: ${reason}`);
+  }
+
+  if (response.status === 429) {
+    const header = response.headers.get('retry-after');
+    const seconds = Number(header);
+    throw new RateLimitedError(
+      'geosearch returned HTTP 429',
+      Number.isFinite(seconds) && seconds >= 0 ? seconds * 1000 : null,
+    );
   }
 
   if (!response.ok) {

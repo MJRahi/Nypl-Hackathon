@@ -26,11 +26,46 @@ const BREAKER_COOLDOWN_MS = 60_000;
 // Circuit breaker
 // ---------------------------------------------------------------------------
 
-export class CircuitOpenError extends Error {
-  constructor(msRemaining: number) {
-    super(`circuit open, retrying in ${Math.ceil(msRemaining / 1000)}s`);
-    this.name = 'CircuitOpenError';
+/**
+ * Upstream asked us to slow down (HTTP 429), as distinct from upstream being
+ * broken. Routes surface this as RATE_LIMITED so the UI can say "try again in a
+ * moment" instead of "the city's data is down" — different advice for the renter.
+ */
+export class RateLimitedError extends Error {
+  readonly retryAfterMs: number | null;
+
+  constructor(message: string, retryAfterMs: number | null = null) {
+    super(message);
+    this.name = 'RateLimitedError';
+    this.retryAfterMs = retryAfterMs;
   }
+}
+
+export class CircuitOpenError extends Error {
+  /** True when the breaker tripped on 429s rather than on errors. */
+  readonly rateLimited: boolean;
+
+  constructor(msRemaining: number, rateLimited = false) {
+    super(
+      `circuit open${rateLimited ? ' after rate limiting' : ''}, retrying in ${Math.ceil(msRemaining / 1000)}s`,
+    );
+    this.name = 'CircuitOpenError';
+    this.rateLimited = rateLimited;
+  }
+}
+
+/** Seconds or an HTTP date, per RFC 9110. Returns null when absent or unparseable. */
+function parseRetryAfter(response: Response): number | null {
+  const header = response.headers.get('retry-after');
+  if (!header) return null;
+
+  const seconds = Number(header);
+  if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000;
+
+  const date = Date.parse(header);
+  if (Number.isFinite(date)) return Math.max(0, date - Date.now());
+
+  return null;
 }
 
 /**
@@ -41,6 +76,12 @@ export class CircuitOpenError extends Error {
 class CircuitBreaker {
   private consecutiveFailures = 0;
   private openedAt: number | null = null;
+  private lastFailureWasRateLimit = false;
+
+  /** Whether the failures that tripped the breaker were rate limits. */
+  get trippedByRateLimit(): boolean {
+    return this.lastFailureWasRateLimit;
+  }
 
   msUntilClose(now = Date.now()): number {
     if (this.openedAt === null) return 0;
@@ -61,10 +102,12 @@ class CircuitBreaker {
   recordSuccess(): void {
     this.consecutiveFailures = 0;
     this.openedAt = null;
+    this.lastFailureWasRateLimit = false;
   }
 
-  recordFailure(): void {
+  recordFailure(wasRateLimit = false): void {
     this.consecutiveFailures += 1;
+    this.lastFailureWasRateLimit = wasRateLimit;
     if (this.consecutiveFailures >= BREAKER_FAILURE_THRESHOLD && this.openedAt === null) {
       this.openedAt = Date.now();
       console.warn(
@@ -77,6 +120,7 @@ class CircuitBreaker {
   reset(): void {
     this.consecutiveFailures = 0;
     this.openedAt = null;
+    this.lastFailureWasRateLimit = false;
   }
 }
 
@@ -111,9 +155,13 @@ export async function resilientFetch(
   init: RequestInit = {},
 ): Promise<Response> {
   const remaining = socrataBreaker.msUntilClose();
-  if (remaining > 0) throw new CircuitOpenError(remaining);
+  if (remaining > 0) {
+    throw new CircuitOpenError(remaining, socrataBreaker.trippedByRateLimit);
+  }
 
   let lastError: Error | null = null;
+  let lastWasRateLimit = false;
+  let retryAfterMs: number | null = null;
 
   for (let attempt = 0; attempt < RETRY_DELAYS_MS.length; attempt += 1) {
     try {
@@ -124,11 +172,14 @@ export async function resilientFetch(
         return response;
       }
 
+      lastWasRateLimit = response.status === 429;
+      if (lastWasRateLimit) retryAfterMs = parseRetryAfter(response);
       lastError = new Error(`HTTP ${response.status}`);
-      socrataBreaker.recordFailure();
+      socrataBreaker.recordFailure(lastWasRateLimit);
     } catch (cause) {
+      lastWasRateLimit = false;
       lastError = cause instanceof Error ? cause : new Error('unknown fetch error');
-      socrataBreaker.recordFailure();
+      socrataBreaker.recordFailure(false);
       // An aborted request is a timeout we already waited on; treat like 5xx.
     }
 
@@ -136,10 +187,17 @@ export async function resilientFetch(
     if (isLastAttempt) break;
 
     if (socrataBreaker.isOpen) {
-      throw new CircuitOpenError(socrataBreaker.msUntilClose());
+      throw new CircuitOpenError(socrataBreaker.msUntilClose(), socrataBreaker.trippedByRateLimit);
     }
 
-    await sleep(jittered(RETRY_DELAYS_MS[attempt]));
+    // Honour Retry-After when upstream gives one, but never wait longer than
+    // the request budget allows.
+    const backoff = jittered(RETRY_DELAYS_MS[attempt]);
+    await sleep(retryAfterMs !== null ? Math.min(retryAfterMs, 2000) : backoff);
+  }
+
+  if (lastWasRateLimit) {
+    throw new RateLimitedError('upstream returned HTTP 429 after 3 attempts', retryAfterMs);
   }
 
   throw lastError ?? new Error('request failed');

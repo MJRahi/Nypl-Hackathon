@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { ApiError, BuildingReport } from '@/lib/types';
 import { BuildingNotFoundError, getBuildingReport } from '@/lib/nyc/report';
-import { CircuitOpenError } from '@/lib/nyc/cache';
+import { CircuitOpenError, RateLimitedError } from '@/lib/nyc/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +40,21 @@ export async function GET(
       return NextResponse.json<ApiError>(
         { error: { code: 'NOT_FOUND', message: 'No NYC records found for that building.' } },
         { status: 404 },
+      );
+    }
+
+    // Rate limiting is not an outage: the renter should retry, not give up.
+    if (cause instanceof RateLimitedError || (cause instanceof CircuitOpenError && cause.rateLimited)) {
+      const retryAfterMs = cause instanceof RateLimitedError ? cause.retryAfterMs : null;
+      const retryAfterSec = Math.max(1, Math.ceil((retryAfterMs ?? 30_000) / 1000));
+      return NextResponse.json<ApiError>(
+        {
+          error: {
+            code: 'RATE_LIMITED',
+            message: 'NYC Open Data is rate limiting us. Try again in a moment.',
+          },
+        },
+        { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
       );
     }
 

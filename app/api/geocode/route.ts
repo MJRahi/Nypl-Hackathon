@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { AddressCandidate, ApiError } from '@/lib/types';
 import { geocodeAddress, GeocodeUpstreamError } from '@/lib/nyc/geocode';
+import { RateLimitedError } from '@/lib/nyc/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +30,19 @@ export async function GET(
     const candidates = await geocodeAddress(q);
     return NextResponse.json<GeocodeResponse>({ candidates });
   } catch (cause) {
+    if (cause instanceof RateLimitedError) {
+      const retryAfterSec = Math.max(1, Math.ceil((cause.retryAfterMs ?? 15_000) / 1000));
+      return NextResponse.json<ApiError>(
+        {
+          error: {
+            code: 'RATE_LIMITED',
+            message: 'Address lookup is rate limited. Try again in a moment.',
+          },
+        },
+        { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
+      );
+    }
+
     if (cause instanceof GeocodeUpstreamError) {
       console.error('[geocode] upstream failure:', cause.message);
       return NextResponse.json<ApiError>(

@@ -9,7 +9,7 @@
  * Dataset IDs verified live on 2026-08-15 — see DATASETS for what changed.
  */
 
-import { CircuitOpenError, resilientFetch } from '@/lib/nyc/cache';
+import { CircuitOpenError, RateLimitedError, resilientFetch } from '@/lib/nyc/cache';
 
 const SOCRATA_BASE = 'https://data.cityofnewyork.us/resource';
 const TIMEOUT_MS = 10_000;
@@ -159,7 +159,7 @@ export async function socrataQuery<T>(
       cache: 'no-store',
     });
   } catch (cause) {
-    if (cause instanceof CircuitOpenError) throw cause;
+    if (cause instanceof CircuitOpenError || cause instanceof RateLimitedError) throw cause;
     const reason = cause instanceof Error ? cause.message : 'unknown error';
     throw new SocrataError(datasetId, null, `request failed: ${reason}`);
   }
@@ -553,6 +553,10 @@ export interface BuildingDatasetsResult {
   warnings: string[];
   /** True when every dataset failed — the caller should treat that as fatal. */
   allFailed: boolean;
+  /** True when any failure was upstream rate limiting rather than an error. */
+  rateLimited: boolean;
+  /** Upstream's Retry-After for the rate limit, when it supplied one. */
+  rateLimitRetryAfterMs: number | null;
 }
 
 /** The 24-month window, plus the format each dataset needs it in. */
@@ -597,13 +601,27 @@ export async function fetchBuildingDatasets(
 
   const warnings: string[] = [];
   let failures = 0;
+  let rateLimited = false;
+  let rateLimitRetryAfterMs: number | null = null;
 
   /** Unwrap one settled dataset, degrading a failure into a warning. */
   const take = <T>(outcome: PromiseSettledResult<T>, name: string): T | null => {
     if (outcome.status === 'fulfilled') return outcome.value;
     failures += 1;
-    const reason =
-      outcome.reason instanceof Error ? outcome.reason.message : 'unknown error';
+
+    const cause: unknown = outcome.reason;
+    if (
+      cause instanceof RateLimitedError ||
+      (cause instanceof CircuitOpenError && cause.rateLimited)
+    ) {
+      rateLimited = true;
+      if (cause instanceof RateLimitedError && cause.retryAfterMs !== null) {
+        // Respect the longest wait upstream asked for.
+        rateLimitRetryAfterMs = Math.max(rateLimitRetryAfterMs ?? 0, cause.retryAfterMs);
+      }
+    }
+
+    const reason = cause instanceof Error ? cause.message : 'unknown error';
     console.error(`[socrata] ${name} failed:`, reason);
     warnings.push(`${name} was unavailable (${reason}); those figures are incomplete.`);
     return null;
@@ -619,5 +637,11 @@ export async function fetchBuildingDatasets(
     pluto: take(pluto, DATASETS.pluto.name),
   };
 
-  return { data, warnings, allFailed: failures === settled.length };
+  return {
+    data,
+    warnings,
+    allFailed: failures === settled.length,
+    rateLimited,
+    rateLimitRetryAfterMs,
+  };
 }
