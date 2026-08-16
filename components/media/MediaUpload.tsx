@@ -174,12 +174,17 @@ function FindingsResults({
                   >
                     <div className="flex gap-3">
                       {frames[finding.frameIndex] ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={frames[finding.frameIndex].dataUrl}
-                          alt=""
-                          className="h-14 w-14 shrink-0 rounded-lg object-cover ring-1 ring-inset ring-slate-200"
-                        />
+                        <div className="shrink-0 text-center">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={frames[finding.frameIndex].dataUrl}
+                            alt={`Source photo ${finding.frameIndex + 1}`}
+                            className="h-14 w-14 rounded-lg object-cover ring-1 ring-inset ring-slate-200"
+                          />
+                          <span className="mt-0.5 block text-[10px] text-slate-400">
+                            Photo {finding.frameIndex + 1}
+                          </span>
+                        </div>
                       ) : null}
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-2">
