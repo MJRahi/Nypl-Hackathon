@@ -120,17 +120,20 @@ export function StatTiles({ report, onOpenDrawer }: StatTilesProps) {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-3">
+      {/* Six columns is the trick that makes five tiles fill a wide row exactly:
+          three at two columns, then two at three. A 3-up grid would leave a hole. */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-6">
         {tiles.map((tile, index) => (
           <StatTile
             key={tile.label}
             tile={tile}
             onOpenDrawer={onOpenDrawer}
-            // An odd count would leave a hole in a 2-up grid; the last tile
-            // takes the full row instead of us inventing a sixth stat.
-            className={
-              tiles.length % 2 === 1 && index === tiles.length - 1 ? 'col-span-2' : undefined
-            }
+            className={cn(
+              // An odd count would leave a hole in a 2-up grid; the last tile
+              // takes the full row instead of us inventing a sixth stat.
+              tiles.length % 2 === 1 && index === tiles.length - 1 && 'col-span-2',
+              index < 3 ? 'md:col-span-2' : 'md:col-span-3',
+            )}
           />
         ))}
       </div>

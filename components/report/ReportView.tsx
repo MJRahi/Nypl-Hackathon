@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import type { BuildingReport, ErrorCode, Pattern } from '@/lib/types';
 import { VerdictHeader } from '@/components/report/VerdictHeader';
 import { StatTiles } from '@/components/report/StatTiles';
@@ -64,6 +64,14 @@ function isBuildingReport(value: unknown): value is BuildingReport {
 
 interface ReportViewProps {
   bbl: string;
+}
+
+/**
+ * Loading, empty and error states have no second column to fill, so they stay in
+ * a single readable column instead of stretching skeleton bars across a desktop.
+ */
+function PreContent({ children }: { children: ReactNode }) {
+  return <div className="lg:mx-auto lg:max-w-2xl lg:pt-6">{children}</div>;
 }
 
 export function ReportView({ bbl }: ReportViewProps) {
@@ -145,18 +153,30 @@ export function ReportView({ bbl }: ReportViewProps) {
     return () => controller.abort();
   }, [bbl, attempt]);
 
-  if (state.kind === 'loading') return <ReportSkeleton />;
-  if (state.kind === 'notFound') return <NoRecordsState bbl={bbl} />;
+  if (state.kind === 'loading')
+    return (
+      <PreContent>
+        <ReportSkeleton />
+      </PreContent>
+    );
+  if (state.kind === 'notFound')
+    return (
+      <PreContent>
+        <NoRecordsState bbl={bbl} />
+      </PreContent>
+    );
   if (state.kind === 'error') {
     const copy = RETRYABLE_COPY[state.code];
     // BAD_INPUT is deterministic — the same malformed BBL fails identically forever.
     const canRetry = state.code !== 'BAD_INPUT';
     return (
-      <RetryState
-        title={copy.title}
-        message={copy.message}
-        onRetry={canRetry ? retry : undefined}
-      />
+      <PreContent>
+        <RetryState
+          title={copy.title}
+          message={copy.message}
+          onRetry={canRetry ? retry : undefined}
+        />
+      </PreContent>
     );
   }
 
@@ -167,61 +187,76 @@ export function ReportView({ bbl }: ReportViewProps) {
 
   return (
     <article className="pb-4">
-      {/* Hard data first, interpretation last. That ordering is the product. */}
-      <VerdictHeader report={report} />
+      {/* Hard data first, interpretation last. That ordering is the product — so
+          the DOM order never changes. On a wide screen the grid only *places*
+          the verdict beside the detail; phones and screen readers still get the
+          exact same sequence. */}
+      <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:px-6 lg:pt-4">
+        <div className="lg:col-span-4">
+          {/* Keeps the grade in view while a long report is scrolled. */}
+          <div className="lg:sticky lg:top-6">
+            <VerdictHeader report={report} />
+          </div>
+        </div>
 
-      <Section
-        title="The numbers"
-        caption="Straight from the city's records for this address. Tap any figure to see the real records behind it."
-      >
-        <StatTiles report={report} onOpenDrawer={openDrawer} />
-      </Section>
+        <div className="lg:col-span-8">
+          <Section
+            title="The numbers"
+            caption="Straight from the city's records for this address. Tap any figure to see the real records behind it."
+          >
+            <StatTiles report={report} onOpenDrawer={openDrawer} />
+          </Section>
 
-      <Section
-        title="What the complaints are about"
-        caption="Most serious first. The large number is the last 24 months. One complaint can raise several issues at once, so these add up to more than the building's complaint total."
-      >
-        <CategoryBreakdown categories={report.categories} onOpenDrawer={openDrawer} />
-      </Section>
+          <Section
+            title="What the complaints are about"
+            caption="Most serious first. The large number is the last 24 months. One complaint can raise several issues at once, so these add up to more than the building's complaint total."
+          >
+            <CategoryBreakdown categories={report.categories} onOpenDrawer={openDrawer} />
+          </Section>
 
-      <Section
-        title="Patterns detected"
-        caption="Deterministic, not AI-generated — computed from the same records below."
-      >
-        <PatternsSection patterns={report.patterns} onViewRecords={openDrawerForPattern} />
-      </Section>
+          <Section
+            title="Patterns detected"
+            caption="Deterministic, not AI-generated — computed from the same records below."
+          >
+            <PatternsSection patterns={report.patterns} onViewRecords={openDrawerForPattern} />
+          </Section>
 
-      <Section
-        title="Building History"
-        caption="Unresolved items first, then newest. Up to the 40 most recent records."
-      >
-        <Timeline timeline={report.timeline} categories={report.categories} />
-      </Section>
+          <Section
+            title="Building History"
+            caption="Unresolved items first, then newest. Up to the 40 most recent records."
+          >
+            <Timeline timeline={report.timeline} categories={report.categories} />
+          </Section>
 
-      {/* Loads on its own and is absent from the grade above — a separate question. */}
-      <RentStabilizationCard bbl={report.bbl} />
+          {/* Loads on its own and is absent from the grade above — a separate question. */}
+          <RentStabilizationCard bbl={report.bbl} />
 
-      <Section title="Check our work" caption="Every row below links to the city dataset it came from.">
-        <RawRecords report={report} />
-      </Section>
+          <Section
+            title="Check our work"
+            caption="Every row below links to the city dataset it came from."
+          >
+            <RawRecords report={report} />
+          </Section>
 
-      {/* Location data, not this building's record — and it never touches the score. */}
-      <FloodRisk report={report} />
+          {/* Location data, not this building's record — and it never touches the score. */}
+          <FloodRisk report={report} />
 
-      <NarrativeSection report={report} onNarrativeReady={setNarrative} />
+          <NarrativeSection report={report} onNarrativeReady={setNarrative} />
 
-      <Section
-        title="What did you see?"
-        caption="Photos from the viewing, checked against this building's record."
-      >
-        <MediaUpload report={reportWithNarrative} />
-      </Section>
+          <Section
+            title="What did you see?"
+            caption="Photos from the viewing, checked against this building's record."
+          >
+            <MediaUpload report={reportWithNarrative} />
+          </Section>
 
-      <Caveats report={report} />
+          <Caveats report={report} />
 
-      <Section title="Share this" caption="Nobody signs a lease alone.">
-        <ShareCard report={reportWithNarrative} />
-      </Section>
+          <Section title="Share this" caption="Nobody signs a lease alone.">
+            <ShareCard report={reportWithNarrative} />
+          </Section>
+        </div>
+      </div>
 
       <MetricDrawer
         request={drawerRequest}

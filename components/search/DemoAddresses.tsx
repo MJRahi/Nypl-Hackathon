@@ -8,12 +8,15 @@ export function DemoAddresses() {
     <div className="mt-4">
       {/* No visible heading in the design, but the list still needs a name in the a11y tree. */}
       <h2 className="sr-only">Try a real building</h2>
-      <ul className="space-y-3">
+      {/* Stacked until there is genuinely room for three — at narrower widths a
+          3-up row truncates the address, which is the only thing on the card
+          that matters. */}
+      <ul className="space-y-3 lg:grid lg:grid-cols-3 lg:gap-4 lg:space-y-0">
         {DEMO_ADDRESSES.map((demo) => (
           <li key={demo.href}>
             <Link
               href={demo.href}
-              className="flex min-h-[64px] items-center gap-3 rounded-2xl bg-white px-4 py-3 ring-1 ring-inset ring-slate-200 transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              className="flex h-full min-h-[64px] items-center gap-3 rounded-2xl bg-white px-4 py-3 ring-1 ring-inset ring-slate-200 transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
             >
               <BuildingIcon className="h-5 w-5 shrink-0 text-blue-600" />
               <span className="min-w-0 flex-1">
