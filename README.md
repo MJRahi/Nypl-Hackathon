@@ -1,11 +1,11 @@
-# LeaseLens NYC
+# Before You Sign NYC
 
-A renter types a NYC address. LeaseLens pulls that building's public housing
+A renter types a NYC address. Before You Sign pulls that building's public housing
 record — HPD complaints and violations, DOB complaints and violations, bedbug
 filings — and turns it into a plain-language risk report before a lease gets
 signed.
 
-Nobody signs a lease alone. LeaseLens also reads photos taken at the viewing
+Nobody signs a lease alone. Before You Sign also reads photos taken at the viewing
 and looks for things worth asking about, and produces a screenshot-shaped
 summary to send to whoever else is helping you decide.
 
@@ -15,7 +15,7 @@ NYC Open Data already publishes every HPD complaint and violation filed
 against a building, but it's spread across seven separate datasets, keyed by
 identifiers (BBL, BIN) nobody carries around, and not something a renter
 standing in a hallway at a viewing is going to cross-reference in the next
-five minutes. LeaseLens does that lookup for them: one address in, one
+five minutes. Before You Sign does that lookup for them: one address in, one
 graded report out.
 
 ## What it does

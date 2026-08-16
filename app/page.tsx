@@ -4,7 +4,7 @@ import { DemoAddresses } from '@/components/search/DemoAddresses';
 export default function Page() {
   return (
     <main className="mx-auto min-h-screen w-full max-w-lg bg-slate-50 px-5 pb-16 pt-12">
-      <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">LeaseLens NYC</p>
+      <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">Before You Sign NYC</p>
       <h1 className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-slate-900">
         Know the building before you sign.
       </h1>
@@ -20,7 +20,7 @@ export default function Page() {
       <DemoAddresses />
 
       <p className="mt-10 border-t border-slate-200 pt-6 text-xs leading-relaxed text-slate-500">
-        LeaseLens reads public NYC Open Data records. It reflects complaints and violations that
+        Before You Sign reads public NYC Open Data records. It reflects complaints and violations that
         were filed &mdash; not everything that happens in a building. It is not legal advice.
       </p>
     </main>

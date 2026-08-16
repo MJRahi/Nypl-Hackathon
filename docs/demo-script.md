@@ -1,4 +1,4 @@
-# LeaseLens NYC — 3-minute demo script
+# Before You Sign NYC — 3-minute demo script
 
 Word-for-word. Practice it once before the real thing — 3 minutes goes fast.
 
@@ -38,7 +38,7 @@ your setup.
 > building that you don't — every complaint, every violation, whether
 > there's an open bedbug case. It's all public. It's just spread across
 > seven different datasets that nobody's cross-referencing standing in a
-> hallway five minutes before a viewing. LeaseLens does that lookup for
+> hallway five minutes before a viewing. Before You Sign does that lookup for
 > you. Let's try a real one."
 
 Type **1510 Sheridan Avenue, Bronx**, or click that tile.
@@ -122,7 +122,7 @@ say so, don't force it:)*
 
 > "And for contrast — this one's a grade A, zero open violations, clean
 > bedbug record. Same pipeline, same seven datasets, completely different
-> story. That's LeaseLens: one address in, the public record out, in the
+> story. That's Before You Sign: one address in, the public record out, in the
 > time it takes to stand in a hallway."
 
 ---
