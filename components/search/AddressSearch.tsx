@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { AddressCandidate } from '@/lib/types';
 import { cn } from '@/components/ui/cn';
+import { InfoIcon, PinIcon } from '@/components/ui/icons';
 
 /** Rate-limit requirement, not a nicety. Do not lower either of these. */
 const MIN_QUERY_LENGTH = 3;
@@ -160,30 +161,33 @@ export function AddressSearch() {
         Enter the address you&rsquo;re about to sign for.
       </label>
 
-      <input
-        id="address-search"
-        type="text"
-        inputMode="text"
-        autoComplete="off"
-        autoCorrect="off"
-        spellCheck={false}
-        role="combobox"
-        aria-expanded={listOpen}
-        aria-controls={listboxId}
-        aria-autocomplete="list"
-        aria-activedescendant={
-          state.kind === 'results' && listOpen ? `${listboxId}-option-${highlighted}` : undefined
-        }
-        placeholder="350 Grand Concourse, Bronx"
-        value={query}
-        onChange={(event) => {
-          setQuery(event.target.value);
-          setOpen(true);
-        }}
-        onFocus={() => setOpen(true)}
-        onKeyDown={onKeyDown}
-        className="mt-2 block w-full rounded-2xl border-0 bg-white px-4 py-4 text-base text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-700"
-      />
+      <div className="relative mt-2">
+        <PinIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-blue-600" />
+        <input
+          id="address-search"
+          type="text"
+          inputMode="text"
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
+          role="combobox"
+          aria-expanded={listOpen}
+          aria-controls={listboxId}
+          aria-autocomplete="list"
+          aria-activedescendant={
+            state.kind === 'results' && listOpen ? `${listboxId}-option-${highlighted}` : undefined
+          }
+          placeholder="350 Grand Concourse, Bronx"
+          value={query}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          onKeyDown={onKeyDown}
+          className="block w-full rounded-2xl border-0 bg-white py-4 pl-11 pr-4 text-base text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-700"
+        />
+      </div>
 
       <p className="mt-2 min-h-[20px] text-xs text-slate-500">
         {state.kind === 'tooShort'
@@ -197,8 +201,13 @@ export function AddressSearch() {
         {state.kind === 'empty' ? 'No matching addresses' : ''}
       </span>
 
+      {/*
+        In flow rather than an absolute overlay. A short panel — the error or the
+        empty state — used to half-cover the demo buildings underneath it, which
+        read as a rendering glitch rather than a dropdown.
+      */}
       {listOpen ? (
-        <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-200">
+        <div className="mt-3 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
           {state.kind === 'loading' ? (
             <p className="px-4 py-4 text-sm text-slate-500">Searching&hellip;</p>
           ) : null}
@@ -215,15 +224,18 @@ export function AddressSearch() {
             only way out is editing the query you already typed correctly.
           */}
           {state.kind === 'error' ? (
-            <div className="px-4 py-4">
-              <p className="text-sm text-slate-600">{state.message}</p>
-              <button
-                type="button"
-                onClick={() => setAttempt((value) => value + 1)}
-                className="mt-3 inline-flex min-h-[40px] items-center rounded-lg bg-slate-900 px-4 text-sm font-semibold text-white hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
-              >
-                Try again
-              </button>
+            <div className="flex gap-3 px-4 py-4">
+              <InfoIcon className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
+              <div className="min-w-0">
+                <p className="text-sm text-slate-600">{state.message}</p>
+                <button
+                  type="button"
+                  onClick={() => setAttempt((value) => value + 1)}
+                  className="mt-3 inline-flex min-h-[40px] items-center rounded-lg bg-slate-900 px-4 text-sm font-semibold text-white hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+                >
+                  Try again
+                </button>
+              </div>
             </div>
           ) : null}
 

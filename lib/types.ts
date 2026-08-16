@@ -1,5 +1,5 @@
 /**
- * Before You Sign NYC — type contract.
+ * Walkthrough — type contract.
  *
  * Originally frozen for three lanes building in parallel; the freeze was
  * explicitly lifted by the project owner to add the drill-down dashboard
