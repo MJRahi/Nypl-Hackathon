@@ -19,7 +19,9 @@ export const MEDIA_DISCLAIMER =
 
 const MODEL = 'claude-sonnet-5';
 const TIMEOUT_MS = 25_000;
-const MAX_TOKENS = 2048;
+// Generous relative to MAX_FINDINGS: a full 20-finding response (label +
+// 1-2 sentence note each) must not get truncated mid-JSON.
+const MAX_TOKENS = 4096;
 
 /** Cap on findings we'll accept back, independent of frame count. */
 const MAX_FINDINGS = 20;
@@ -107,7 +109,7 @@ function parseFrame(frame: string): { mediaType: ImageMediaType; data: string } 
   return { mediaType: 'image/jpeg', data: frame };
 }
 
-function buildContent(frames: string[]): Anthropic.ImageBlockParam[] | Array<Anthropic.TextBlockParam | Anthropic.ImageBlockParam> {
+function buildContent(frames: string[]): Array<Anthropic.TextBlockParam | Anthropic.ImageBlockParam> {
   const blocks: Array<Anthropic.TextBlockParam | Anthropic.ImageBlockParam> = [
     {
       type: 'text',

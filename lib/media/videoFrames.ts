@@ -9,6 +9,8 @@ import { drawToJpeg } from '@/lib/media/downscale';
 export const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
 export const MAX_VIDEO_SECONDS = 60;
 const FRAME_COUNT = 6;
+/** A stalled decode or a seek that never fires 'seeked' must not hang the UI forever. */
+const EVENT_TIMEOUT_MS = 8000;
 
 /** Thrown when the video itself is fine but exceeds the length cap. Distinct
  * from a generic extraction failure so the caller can show a specific message
@@ -17,14 +19,22 @@ export class VideoTooLongError extends Error {}
 
 function waitFor(video: HTMLVideoElement, event: 'loadedmetadata' | 'seeked'): Promise<void> {
   return new Promise((resolve, reject) => {
-    const onEvent = () => {
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error('Timed out reading that video.'));
+    }, EVENT_TIMEOUT_MS);
+
+    const cleanup = () => {
+      clearTimeout(timer);
       video.removeEventListener(event, onEvent);
       video.removeEventListener('error', onError);
+    };
+    const onEvent = () => {
+      cleanup();
       resolve();
     };
     const onError = () => {
-      video.removeEventListener(event, onEvent);
-      video.removeEventListener('error', onError);
+      cleanup();
       reject(new Error('Could not read that video.'));
     };
     video.addEventListener(event, onEvent);

@@ -235,6 +235,12 @@ export function MediaUpload({ report }: MediaUploadProps) {
   const photoInputRef = useRef<HTMLInputElement | null>(null);
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
   const videoInputRef = useRef<HTMLInputElement | null>(null);
+  const nextFrameId = useRef(0);
+
+  function makeFrameId(prefix: string): string {
+    nextFrameId.current += 1;
+    return `${prefix}-${nextFrameId.current}`;
+  }
 
   async function addPhotoFiles(files: File[]) {
     const images = files.filter((f) => f.type.startsWith('image/'));
@@ -256,26 +262,34 @@ export function MediaUpload({ report }: MediaUploadProps) {
       return;
     }
 
-    try {
-      const dataUrls = await Promise.all(accepted.map(downscaleImageFile));
+    // allSettled, not all: one corrupt file in a multi-select shouldn't drop
+    // the photos that decoded fine alongside it.
+    const outcomes = await Promise.allSettled(accepted.map(downscaleImageFile));
+    const dataUrls = outcomes
+      .filter((o): o is PromiseFulfilledResult<string> => o.status === 'fulfilled')
+      .map((o) => o.value);
+    const failedCount = outcomes.length - dataUrls.length;
+
+    if (dataUrls.length > 0) {
       setFrames((prev) => [
         ...prev,
-        ...dataUrls.map((dataUrl, i) => ({ id: `photo-${Date.now()}-${i}`, dataUrl })),
+        ...dataUrls.map((dataUrl) => ({ id: makeFrameId('photo'), dataUrl })),
       ]);
       setStatus('idle');
       setAnalysis(null);
-
-      const notices: string[] = [];
-      if (oversized.length > 0) {
-        notices.push(`${oversized.length} photo${oversized.length === 1 ? '' : 's'} over 8MB skipped`);
-      }
-      if (skippedForRoom > 0) {
-        notices.push(`${skippedForRoom} skipped — ${MAX_PHOTOS} photo max`);
-      }
-      setNotice(notices.length > 0 ? `${notices.join('; ')}.` : null);
-    } catch {
-      setNotice("Couldn't process one of those photos. Try a different file.");
     }
+
+    const notices: string[] = [];
+    if (failedCount > 0) {
+      notices.push(`${failedCount} photo${failedCount === 1 ? '' : 's'} couldn't be read`);
+    }
+    if (oversized.length > 0) {
+      notices.push(`${oversized.length} photo${oversized.length === 1 ? '' : 's'} over 8MB skipped`);
+    }
+    if (skippedForRoom > 0) {
+      notices.push(`${skippedForRoom} skipped — ${MAX_PHOTOS} photo max`);
+    }
+    setNotice(notices.length > 0 ? `${notices.join('; ')}.` : null);
   }
 
   async function handleVideoFile(file: File) {
@@ -284,13 +298,22 @@ export function MediaUpload({ report }: MediaUploadProps) {
       setNotice(`That video is ${Math.round(file.size / 1e6)}MB — max is 50MB.`);
       return;
     }
+    if (frames.length >= MAX_PHOTOS) {
+      setNotice(`Up to ${MAX_PHOTOS} photos at a time — remove some first, then upload a video.`);
+      return;
+    }
 
     setVideoBusy(true);
     try {
       const extracted = await extractFramesFromVideo(file);
-      setFrames(extracted.map((dataUrl, i) => ({ id: `video-${Date.now()}-${i}`, dataUrl })));
+      const room = MAX_PHOTOS - frames.length;
+      const kept = extracted.slice(0, room);
+      setFrames((prev) => [...prev, ...kept.map((dataUrl) => ({ id: makeFrameId('video'), dataUrl }))]);
       setStatus('idle');
       setAnalysis(null);
+      if (kept.length < extracted.length) {
+        setNotice(`Kept ${kept.length} of ${extracted.length} extracted frames — ${MAX_PHOTOS} photo max.`);
+      }
     } catch (error) {
       if (error instanceof VideoTooLongError) {
         setNotice(error.message);
@@ -352,7 +375,7 @@ export function MediaUpload({ report }: MediaUploadProps) {
     }
   }
 
-  const canAddMore = frames.length < MAX_PHOTOS && status !== 'loading';
+  const canAddMore = frames.length < MAX_PHOTOS && status !== 'loading' && !videoBusy;
 
   return (
     <div className="space-y-4">
@@ -454,14 +477,16 @@ export function MediaUpload({ report }: MediaUploadProps) {
                   alt=""
                   className="h-16 w-16 rounded-lg object-cover ring-1 ring-inset ring-slate-200"
                 />
-                <button
-                  type="button"
-                  onClick={() => removeFrame(frame.id)}
-                  aria-label="Remove photo"
-                  className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-slate-900 text-[11px] font-semibold text-white shadow"
-                >
-                  &times;
-                </button>
+                {status !== 'loading' ? (
+                  <button
+                    type="button"
+                    onClick={() => removeFrame(frame.id)}
+                    aria-label="Remove photo"
+                    className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-slate-900 text-[11px] font-semibold text-white shadow"
+                  >
+                    &times;
+                  </button>
+                ) : null}
               </li>
             ))}
           </ul>
