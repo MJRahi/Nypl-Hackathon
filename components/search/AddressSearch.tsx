@@ -43,6 +43,8 @@ export function AddressSearch() {
   const [state, setState] = useState<SearchState>({ kind: 'idle' });
   const [highlighted, setHighlighted] = useState(0);
   const [open, setOpen] = useState(false);
+  /** Bumped by "Try again" to re-run the lookup for the same query. */
+  const [attempt, setAttempt] = useState(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const listboxId = useId();
 
@@ -111,7 +113,7 @@ export function AddressSearch() {
       clearTimeout(timer);
       controller?.abort();
     };
-  }, [query]);
+  }, [query, attempt]);
 
   const candidates = state.kind === 'results' ? state.candidates : [];
   const listOpen = open && state.kind !== 'idle' && state.kind !== 'tooShort';
@@ -207,8 +209,22 @@ export function AddressSearch() {
             </p>
           ) : null}
 
+          {/*
+            The city geocoder 503s under load, and it usually clears in seconds.
+            Without this the dropdown is a dead end: the message sits there and the
+            only way out is editing the query you already typed correctly.
+          */}
           {state.kind === 'error' ? (
-            <p className="px-4 py-4 text-sm text-slate-600">{state.message}</p>
+            <div className="px-4 py-4">
+              <p className="text-sm text-slate-600">{state.message}</p>
+              <button
+                type="button"
+                onClick={() => setAttempt((value) => value + 1)}
+                className="mt-3 inline-flex min-h-[40px] items-center rounded-lg bg-slate-900 px-4 text-sm font-semibold text-white hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+              >
+                Try again
+              </button>
+            </div>
           ) : null}
 
           {state.kind === 'results' ? (
