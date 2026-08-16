@@ -230,7 +230,20 @@ export async function readDemoReport(bbl: string): Promise<BuildingReport | null
 // File cache
 // ---------------------------------------------------------------------------
 
+/**
+ * Bump whenever BuildingReport gains, drops, or renames a field.
+ *
+ * The TTL answers "is this data still true?", which is a different question
+ * from "does this data still fit the code?". An entry written before a field
+ * existed stays fresh for 24h and deserializes into a shape the UI believes is
+ * guaranteed — `scoreBreakdown` arriving as undefined crashed the score
+ * explainer that way. A version mismatch discards the entry instead.
+ */
+const CACHE_SCHEMA_VERSION = 2;
+
 interface CacheEnvelope {
+  /** Absent on entries written before versioning; those are always discarded. */
+  schemaVersion?: number;
   cachedAt: string;
   report: BuildingReport;
 }
@@ -246,6 +259,9 @@ export async function readCachedReport(bbl: string): Promise<CacheHit | null> {
   try {
     const raw = await readFile(path.join(CACHE_DIR, `${bbl}.json`), 'utf8');
     const envelope = JSON.parse(raw) as CacheEnvelope;
+    // Checked before the age: a wrong-shaped entry is unusable at any age, and
+    // must not survive as the stale fallback either.
+    if (envelope.schemaVersion !== CACHE_SCHEMA_VERSION) return null;
     const ageMs = Date.now() - new Date(envelope.cachedAt).getTime();
     if (!Number.isFinite(ageMs)) return null;
     return { report: envelope.report, ageMs, stale: ageMs > CACHE_TTL_MS };
@@ -259,7 +275,11 @@ export async function writeCachedReport(bbl: string, report: BuildingReport): Pr
   if (!isSafeBbl(bbl)) return;
   try {
     await mkdir(CACHE_DIR, { recursive: true });
-    const envelope: CacheEnvelope = { cachedAt: new Date().toISOString(), report };
+    const envelope: CacheEnvelope = {
+      schemaVersion: CACHE_SCHEMA_VERSION,
+      cachedAt: new Date().toISOString(),
+      report,
+    };
     await writeFile(path.join(CACHE_DIR, `${bbl}.json`), JSON.stringify(envelope), 'utf8');
   } catch (cause) {
     console.warn(`[cache] could not write ${bbl}:`, cause instanceof Error ? cause.message : cause);
