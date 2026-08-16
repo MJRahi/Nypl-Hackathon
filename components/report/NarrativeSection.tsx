@@ -26,12 +26,23 @@ function isNarrative(value: unknown): value is Narrative {
   );
 }
 
+interface NarrativeSectionProps {
+  report: BuildingReport;
+  /**
+   * /api/building always returns narrative: null — this section is the only
+   * place that fetches the real one. Callers that also want it (the share
+   * card, the no-media fallback checklist) get it here rather than issuing a
+   * second identical request.
+   */
+  onNarrativeReady?: (narrative: Narrative | null) => void;
+}
+
 /**
  * Interpretation, last on the page and last to load. The request body carries
  * aggregates only — no address, no BBL, no raw record text — and the model is
  * never asked to produce a number we display.
  */
-export function NarrativeSection({ report }: { report: BuildingReport }) {
+export function NarrativeSection({ report, onNarrativeReady }: NarrativeSectionProps) {
   const [state, setState] = useState<State>({ kind: 'loading' });
 
   useEffect(() => {
@@ -57,18 +68,27 @@ export function NarrativeSection({ report }: { report: BuildingReport }) {
         const payload: unknown = await response.json().catch(() => null);
         if (!response.ok || typeof payload !== 'object' || payload === null) {
           setState({ kind: 'hidden' });
+          onNarrativeReady?.(null);
           return;
         }
 
         const narrative = (payload as { narrative?: unknown }).narrative;
-        setState(isNarrative(narrative) ? { kind: 'ready', narrative } : { kind: 'hidden' });
+        if (isNarrative(narrative)) {
+          setState({ kind: 'ready', narrative });
+          onNarrativeReady?.(narrative);
+        } else {
+          setState({ kind: 'hidden' });
+          onNarrativeReady?.(null);
+        }
       } catch (error) {
         if (error instanceof DOMException && error.name === 'AbortError') return;
         setState({ kind: 'hidden' });
+        onNarrativeReady?.(null);
       }
     })();
 
     return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [report]);
 
   if (state.kind === 'hidden') return null;

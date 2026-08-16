@@ -14,6 +14,8 @@ import { Caveats } from '@/components/report/Caveats';
 import { ReportSkeleton } from '@/components/report/ReportSkeleton';
 import { NoRecordsState, RetryState } from '@/components/report/ReportStates';
 import { MetricDrawer, type DrawerRequest } from '@/components/report/MetricDrawer';
+import { MediaUpload } from '@/components/media/MediaUpload';
+import { ShareCard } from '@/components/media/ShareCard';
 import { Section } from '@/components/ui/Section';
 
 type State =
@@ -68,6 +70,10 @@ export function ReportView({ bbl }: ReportViewProps) {
   const [attempt, setAttempt] = useState(0);
   const [drawerRequest, setDrawerRequest] = useState<DrawerRequest | null>(null);
   const drawerToken = useRef(0);
+  // /api/building always returns narrative: null; NarrativeSection fetches the
+  // real one and reports it back here so ShareCard and MediaUpload's no-media
+  // checklist see it too, without a second identical request.
+  const [narrative, setNarrative] = useState<BuildingReport['narrative']>(null);
 
   const retry = useCallback(() => {
     setState({ kind: 'loading' });
@@ -154,6 +160,9 @@ export function ReportView({ bbl }: ReportViewProps) {
   }
 
   const { report } = state;
+  // Merged view for anything that wants the narrative NarrativeSection fetched
+  // on its own — /api/building itself always returns narrative: null.
+  const reportWithNarrative: BuildingReport = { ...report, narrative };
 
   return (
     <article className="pb-4">
@@ -195,9 +204,20 @@ export function ReportView({ bbl }: ReportViewProps) {
         <RawRecords report={report} />
       </Section>
 
-      <NarrativeSection report={report} />
+      <NarrativeSection report={report} onNarrativeReady={setNarrative} />
+
+      <Section
+        title="What did you see?"
+        caption="Photos from the viewing, checked against this building's record."
+      >
+        <MediaUpload report={reportWithNarrative} />
+      </Section>
 
       <Caveats report={report} />
+
+      <Section title="Share this" caption="Nobody signs a lease alone.">
+        <ShareCard report={reportWithNarrative} />
+      </Section>
 
       <MetricDrawer
         request={drawerRequest}
