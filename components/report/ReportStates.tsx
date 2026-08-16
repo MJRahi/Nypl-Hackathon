@@ -52,7 +52,12 @@ export function NoRecordsState({ bbl }: { bbl: string }) {
 interface RetryStateProps {
   title: string;
   message: string;
-  onRetry: () => void;
+  /**
+   * Omitted when retrying cannot possibly help — a malformed BBL fails the same
+   * way every time, so offering the button just wastes a tap on someone who is
+   * already stuck.
+   */
+  onRetry?: () => void;
 }
 
 export function RetryState({ title, message, onRetry }: RetryStateProps) {
@@ -61,9 +66,11 @@ export function RetryState({ title, message, onRetry }: RetryStateProps) {
       <div className="rounded-2xl bg-white px-5 py-6 ring-1 ring-inset ring-slate-200">
         <h1 className="text-xl font-semibold leading-snug tracking-tight text-slate-900">{title}</h1>
         <p className="mt-3 text-sm leading-relaxed text-slate-600">{message}</p>
-        <Button onClick={onRetry} className="mt-5 w-full">
-          Try again
-        </Button>
+        {onRetry ? (
+          <Button onClick={onRetry} className="mt-5 w-full">
+            Try again
+          </Button>
+        ) : null}
       </div>
 
       <Link href="/" className="mt-4 block">

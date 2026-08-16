@@ -118,7 +118,15 @@ export function ReportView({ bbl }: ReportViewProps) {
   if (state.kind === 'notFound') return <NoRecordsState bbl={bbl} />;
   if (state.kind === 'error') {
     const copy = RETRYABLE_COPY[state.code];
-    return <RetryState title={copy.title} message={copy.message} onRetry={retry} />;
+    // BAD_INPUT is deterministic — the same malformed BBL fails identically forever.
+    const canRetry = state.code !== 'BAD_INPUT';
+    return (
+      <RetryState
+        title={copy.title}
+        message={copy.message}
+        onRetry={canRetry ? retry : undefined}
+      />
+    );
   }
 
   const { report } = state;
