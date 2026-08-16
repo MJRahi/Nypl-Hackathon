@@ -18,9 +18,13 @@ export function ReportSkeleton() {
 
       <div className="px-5 py-8">
         <Skeleton className="h-5 w-40" />
+        {/* Five tiles, last one full-width — same shape StatTiles settles into. */}
         <div className="mt-5 grid grid-cols-2 gap-3">
-          {[0, 1, 2, 3, 4, 5].map((key) => (
-            <Skeleton key={key} className="h-24 w-full rounded-2xl" />
+          {[0, 1, 2, 3, 4].map((key) => (
+            <Skeleton
+              key={key}
+              className={key === 4 ? 'col-span-2 h-24 w-full rounded-2xl' : 'h-24 w-full rounded-2xl'}
+            />
           ))}
         </div>
         <Skeleton className="mt-4 h-40 w-full rounded-2xl" />
