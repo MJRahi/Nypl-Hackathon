@@ -9,6 +9,7 @@ import { PatternsSection } from '@/components/report/PatternsSection';
 import { Timeline } from '@/components/report/Timeline';
 import { RawRecords } from '@/components/report/RawRecords';
 import { NarrativeSection } from '@/components/report/NarrativeSection';
+import { FloodRisk } from '@/components/report/FloodRisk';
 import { RentStabilizationCard } from '@/components/report/RentStabilizationCard';
 import { Caveats } from '@/components/report/Caveats';
 import { ReportSkeleton } from '@/components/report/ReportSkeleton';
@@ -203,6 +204,9 @@ export function ReportView({ bbl }: ReportViewProps) {
       <Section title="Check our work" caption="Every row below links to the city dataset it came from.">
         <RawRecords report={report} />
       </Section>
+
+      {/* Location data, not this building's record — and it never touches the score. */}
+      <FloodRisk report={report} />
 
       <NarrativeSection report={report} onNarrativeReady={setNarrative} />
 
