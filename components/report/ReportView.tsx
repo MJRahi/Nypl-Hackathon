@@ -9,6 +9,7 @@ import { PatternsSection } from '@/components/report/PatternsSection';
 import { Timeline } from '@/components/report/Timeline';
 import { RawRecords } from '@/components/report/RawRecords';
 import { NarrativeSection } from '@/components/report/NarrativeSection';
+import { RentStabilizationCard } from '@/components/report/RentStabilizationCard';
 import { Caveats } from '@/components/report/Caveats';
 import { ReportSkeleton } from '@/components/report/ReportSkeleton';
 import { NoRecordsState, RetryState } from '@/components/report/ReportStates';
@@ -186,6 +187,9 @@ export function ReportView({ bbl }: ReportViewProps) {
       >
         <Timeline timeline={report.timeline} categories={report.categories} />
       </Section>
+
+      {/* Loads on its own and is absent from the grade above — a separate question. */}
+      <RentStabilizationCard bbl={report.bbl} />
 
       <Section title="Check our work" caption="Every row below links to the city dataset it came from.">
         <RawRecords report={report} />
