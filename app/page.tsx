@@ -9,7 +9,7 @@ export default function Page() {
         <BrandMark className="h-11 w-11 shrink-0 text-blue-600" />
         <div className="min-w-0">
           <p className="text-2xl font-bold leading-none tracking-tight text-slate-900">
-            Before You Sign
+            Walkthrough
           </p>
           <p className="mt-1.5 text-xs font-bold uppercase tracking-[0.12em] text-blue-600">
             NYC Building Insights
@@ -32,7 +32,7 @@ export default function Page() {
       <DemoAddresses />
 
       <p className="mt-10 border-t border-slate-200 pt-6 text-center text-xs leading-relaxed text-slate-500">
-        Before You Sign uses public NYC Open Data records. It reflects complaints and violations
+        Walkthrough uses public NYC Open Data records. It reflects complaints and violations
         that have been reported to the city.
       </p>
     </main>
