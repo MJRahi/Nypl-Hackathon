@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Category, MediaAnalysis, MediaFinding, Severity } from '@/lib/types';
+import { RateLimitedError } from '@/lib/nyc/cache';
 
 /**
  * Vision analysis. Photos in, cautious observations out.
@@ -78,6 +79,20 @@ const OUTPUT_SCHEMA = {
   required: ['findings'],
   additionalProperties: false,
 } as const;
+
+/** Mirrors the parsing lib/nyc/cache.ts applies to Socrata's Retry-After. */
+function parseRetryAfterHeader(headers: Headers | null | undefined): number | null {
+  const header = headers?.get('retry-after');
+  if (!header) return null;
+
+  const seconds = Number(header);
+  if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000;
+
+  const date = Date.parse(header);
+  if (Number.isFinite(date)) return Math.max(0, date - Date.now());
+
+  return null;
+}
 
 type ImageMediaType = 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif';
 
@@ -167,19 +182,32 @@ export async function analyzeFrames(frames: string[]): Promise<MediaAnalysis> {
   // Retries would blow the request timeout budget: the SDK multiplies timeout by attempts.
   const client = new Anthropic({ apiKey, maxRetries: 0 });
 
-  const response = await client.messages.create(
-    {
-      model: MODEL,
-      max_tokens: MAX_TOKENS,
-      system: SYSTEM_PROMPT,
-      output_config: {
-        effort: 'low',
-        format: { type: 'json_schema', schema: OUTPUT_SCHEMA },
+  let response: Anthropic.Message;
+  try {
+    response = await client.messages.create(
+      {
+        model: MODEL,
+        max_tokens: MAX_TOKENS,
+        system: SYSTEM_PROMPT,
+        output_config: {
+          effort: 'low',
+          format: { type: 'json_schema', schema: OUTPUT_SCHEMA },
+        },
+        messages: [{ role: 'user', content: buildContent(frames) }],
       },
-      messages: [{ role: 'user', content: buildContent(frames) }],
-    },
-    { timeout: TIMEOUT_MS },
-  );
+      { timeout: TIMEOUT_MS },
+    );
+  } catch (cause) {
+    // Distinct from a broken provider: the UI tells the renter "try again in
+    // a moment" rather than "something's down," same as the NYC data routes.
+    if (cause instanceof Anthropic.RateLimitError) {
+      throw new RateLimitedError(
+        'vision provider rate limited the request',
+        parseRetryAfterHeader(cause.headers),
+      );
+    }
+    throw cause;
+  }
 
   if (response.stop_reason === 'refusal') {
     throw new Error('Vision model declined the request.');
