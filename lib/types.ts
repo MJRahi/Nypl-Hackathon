@@ -1,5 +1,5 @@
 /**
- * LeaseLens NYC — FROZEN CONTRACT.
+ * Walkthrough — FROZEN CONTRACT.
  *
  * Do not change, add, rename, or remove anything in this file.
  * Three lanes build against it in parallel. Comments may be edited; shapes may not.

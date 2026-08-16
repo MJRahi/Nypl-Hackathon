@@ -15,7 +15,7 @@ interface ShareCardProps {
 function buildShareText(report: BuildingReport): string {
   const narrative = report.narrative;
   const lines = [
-    `LeaseLens NYC — ${report.address}`,
+    `Walkthrough — ${report.address}`,
     `Grade ${report.grade} (${report.score}/100)`,
   ];
 
@@ -89,7 +89,7 @@ export function ShareCard({ report, className }: ShareCardProps) {
       >
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-            LeaseLens NYC
+            Walkthrough
           </span>
           <span className="text-[11px] text-slate-500">
             {formatTimestamp(report.dataAsOf)}

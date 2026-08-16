@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'LeaseLens NYC',
+  title: 'Walkthrough',
   description: 'Building risk reports for NYC renters, built from NYC Open Data.',
 };
 
