@@ -10,11 +10,12 @@
   "grade": "F",
   "score": 36,
   "stats": {
-    "hpdComplaintsAllTime": 959,
-    "hpdComplaints24mo": 73,
+    "hpdComplaintsAllTime": 960,
+    "hpdComplaints24mo": 74,
     "openViolations": 122,
     "closedViolations": 1624,
     "classCViolations": 76,
+    "classBViolations": 25,
     "dobComplaints24mo": 7,
     "complaintsPerUnitPerYear": 0.51,
     "cityMedianPerUnitPerYear": 0.28
@@ -39,8 +40,8 @@
     {
       "key": "pests",
       "label": "Pests & Vermin",
-      "count24mo": 17,
-      "countAllTime": 198,
+      "count24mo": 18,
+      "countAllTime": 199,
       "openCount": 29,
       "severity": "high"
     },
@@ -55,8 +56,8 @@
     {
       "key": "structural",
       "label": "Structural & Surfaces",
-      "count24mo": 35,
-      "countAllTime": 364,
+      "count24mo": 36,
+      "countAllTime": 365,
       "openCount": 56,
       "severity": "high"
     },
@@ -87,6 +88,14 @@
   ],
   "timeline": [
     {
+      "date": "2026-08-15",
+      "source": "HPD_COMPLAINT",
+      "category": "pests",
+      "status": "open",
+      "description": "Unsanitary Condition",
+      "className": null
+    },
+    {
       "date": "2026-07-15",
       "source": "HPD_VIOLATION",
       "category": "structural",
@@ -97,9 +106,9 @@
     {
       "date": "2026-07-07",
       "source": "HPD_VIOLATION",
-      "category": "plumbing",
-      "status": "closed",
-      "description": "REPAIR THE FLUSHING APPARATUS AND MAINTAIN SAME SO AS TO FLUSH EFFECTIVELY THE WATER CLOSET ... IN THE BATHROOM LOCATED AT APT 2F, 2nd STORY, 2nd APARTMENT FROM NORTH AT EAST",
+      "category": "structural",
+      "status": "open",
+      "description": "HMC: TRACE AND REPAIR THE SOURCE AND ABATE THE VISIBLE MOLD CONDITION... MORE THAN 1O SQUARE FEET AT THE CEILING IN THE BATHROOM LOCATED AT APT 2F, 2nd STORY, 2nd APARTMENT FROM NORTH AT EAST",
       "className": "B"
     },
     {
@@ -115,15 +124,7 @@
       "source": "HPD_VIOLATION",
       "category": "structural",
       "status": "closed",
-      "description": "HMC: PROPERLY REPAIR OR REPLACE THE BROKEN OR DEFECTIVE WALL CABINET DOOR AT THE EAST WALL IN THE KITCHEN LOCATED AT APT 2F, 2nd STORY, 2nd APARTMENT FROM NORTH AT EAST",
-      "className": "B"
-    },
-    {
-      "date": "2026-07-07",
-      "source": "HPD_VIOLATION",
-      "category": "plumbing",
-      "status": "closed",
-      "description": ", 2027 HMC: PROPERLY REPAIR THE SOURCE AND ABATE THE EVIDENCE OF A WATER LEAK AT THE CEILING IN THE BATHROOM LOCATED AT APT 2F, 2nd STORY, 2nd APARTMENT FROM NORTH AT EAST",
+      "description": "HMC: PROPERLY REPAIR OR REPLACE THE BROKEN OR DEFECTIVE INTERCOM SYSTEM FROM THE BUILDING ENTRANCE TO THE EAST WALL INTERCOM SYSTEM IN THE FOYER LOCATED AT APT 2F, 2nd STORY, 2nd APARTMENT FROM NORTH AT EAST",
       "className": "B"
     },
     {
@@ -139,15 +140,23 @@
       "source": "HPD_VIOLATION",
       "category": "structural",
       "status": "closed",
-      "description": "HMC: PROPERLY REPAIR OR REPLACE THE BROKEN OR DEFECTIVE INTERCOM SYSTEM FROM THE BUILDING ENTRANCE TO THE EAST WALL INTERCOM SYSTEM IN THE FOYER LOCATED AT APT 2F, 2nd STORY, 2nd APARTMENT FROM NORTH AT EAST",
+      "description": "HMC: PROPERLY REPAIR OR REPLACE THE BROKEN OR DEFECTIVE WALL CABINET DOOR AT THE EAST WALL IN THE KITCHEN LOCATED AT APT 2F, 2nd STORY, 2nd APARTMENT FROM NORTH AT EAST",
       "className": "B"
     },
     {
       "date": "2026-07-07",
       "source": "HPD_VIOLATION",
-      "category": "structural",
-      "status": "open",
-      "description": "HMC: TRACE AND REPAIR THE SOURCE AND ABATE THE VISIBLE MOLD CONDITION... MORE THAN 1O SQUARE FEET AT THE CEILING IN THE BATHROOM LOCATED AT APT 2F, 2nd STORY, 2nd APARTMENT FROM NORTH AT EAST",
+      "category": "plumbing",
+      "status": "closed",
+      "description": "REPAIR THE FLUSHING APPARATUS AND MAINTAIN SAME SO AS TO FLUSH EFFECTIVELY THE WATER CLOSET ... IN THE BATHROOM LOCATED AT APT 2F, 2nd STORY, 2nd APARTMENT FROM NORTH AT EAST",
+      "className": "B"
+    },
+    {
+      "date": "2026-07-07",
+      "source": "HPD_VIOLATION",
+      "category": "plumbing",
+      "status": "closed",
+      "description": ", 2027 HMC: PROPERLY REPAIR THE SOURCE AND ABATE THE EVIDENCE OF A WATER LEAK AT THE CEILING IN THE BATHROOM LOCATED AT APT 2F, 2nd STORY, 2nd APARTMENT FROM NORTH AT EAST",
       "className": "B"
     },
     {
@@ -161,9 +170,9 @@
     {
       "date": "2026-07-02",
       "source": "HPD_COMPLAINT",
-      "category": "other",
+      "category": "plumbing",
       "status": "closed",
-      "description": "General — Damaged Or Missing",
+      "description": "Plumbing — Flush Handle Broken Or Missing",
       "className": null
     },
     {
@@ -179,7 +188,7 @@
       "source": "HPD_VIOLATION",
       "category": "pests",
       "status": "open",
-      "description": "ABATE THE INFESTATION CONSISTING OF MICE IN THE ENTIRE APARTMENT LOCATED AT APT 4A, 4th STORY, 1st APARTMENT FROM SOUTH AT WEST",
+      "description": "ABATE THE INFESTATION CONSISTING OF ROACHES IN THE ENTIRE APARTMENT LOCATED AT APT 4A, 4th STORY, 1st APARTMENT FROM SOUTH AT WEST",
       "className": "C"
     },
     {
@@ -187,15 +196,15 @@
       "source": "HPD_VIOLATION",
       "category": "pests",
       "status": "open",
-      "description": "ABATE THE INFESTATION CONSISTING OF ROACHES IN THE ENTIRE APARTMENT LOCATED AT APT 4A, 4th STORY, 1st APARTMENT FROM SOUTH AT WEST",
+      "description": "ABATE THE INFESTATION CONSISTING OF MICE IN THE ENTIRE APARTMENT LOCATED AT APT 4A, 4th STORY, 1st APARTMENT FROM SOUTH AT WEST",
       "className": "C"
     },
     {
       "date": "2026-06-23",
       "source": "HPD_COMPLAINT",
-      "category": "structural",
+      "category": "other",
       "status": "closed",
-      "description": "Flooring/Stairs — Floor Covering Torn Or Missing",
+      "description": "Appliance — No Gas Or Electricity",
       "className": null
     },
     {
@@ -211,7 +220,7 @@
       "source": "HPD_VIOLATION",
       "category": "structural",
       "status": "closed",
-      "description": "PROVIDE APPROVED GLASS INPLACE OF PLEXIGLASS AT BUILDING ENTRANCE DOOR AT 1ST STORY",
+      "description": "PROVIDE APPROVED GLASS INPLACE OF PLEXIGLASS INSTALLED AT LOWER AND UPPER WINDOW SASH AT 1ST, 2ND, 3RD WINDOW FROM NORTH AT WEST WALL, AT PUBLIC HALL, 1ST STORY",
       "className": "B"
     },
     {
@@ -226,17 +235,17 @@
       "date": "2026-06-16",
       "source": "HPD_VIOLATION",
       "category": "structural",
-      "status": "open",
-      "description": "& 309 M/D LAW ABATE THE NUISANCE CONSISTING OF PLEXIGLASS INSTALLED AT LOWER AND UPPER WINDOW SASH AT 1ST, 2ND, 3RD WINDOW FROM NORTH AT WEST WALL, AT PUBLIC HALL, 1ST STORY",
-      "className": "C"
+      "status": "closed",
+      "description": "PROVIDE APPROVED GLASS INPLACE OF PLEXIGLASS AT BUILDING ENTRANCE DOOR AT 1ST STORY",
+      "className": "B"
     },
     {
       "date": "2026-06-16",
       "source": "HPD_VIOLATION",
       "category": "structural",
-      "status": "closed",
-      "description": "PROVIDE APPROVED GLASS INPLACE OF PLEXIGLASS INSTALLED AT LOWER AND UPPER WINDOW SASH AT 1ST, 2ND, 3RD WINDOW FROM NORTH AT WEST WALL, AT PUBLIC HALL, 1ST STORY",
-      "className": "B"
+      "status": "open",
+      "description": "& 309 M/D LAW ABATE THE NUISANCE CONSISTING OF PLEXIGLASS INSTALLED AT LOWER AND UPPER WINDOW SASH AT 1ST, 2ND, 3RD WINDOW FROM NORTH AT WEST WALL, AT PUBLIC HALL, 1ST STORY",
+      "className": "C"
     },
     {
       "date": "2026-06-15",
@@ -249,9 +258,9 @@
     {
       "date": "2026-05-15",
       "source": "HPD_COMPLAINT",
-      "category": "plumbing",
+      "category": "electrical",
       "status": "closed",
-      "description": "Water Leak — At Wall Or Ceiling",
+      "description": "Electric — Fixture Wet Or Flooded",
       "className": null
     },
     {
@@ -261,6 +270,22 @@
       "status": "closed",
       "description": "Water Leak — At Wall Or Ceiling",
       "className": null
+    },
+    {
+      "date": "2026-04-13",
+      "source": "HPD_VIOLATION",
+      "category": "plumbing",
+      "status": "closed",
+      "description": "REPAIR THE BROKEN OR DEFECTIVE CONNECTION AT DRAINPIPE UNDER SINK IN THE KITCHEN LOCATED AT APT 3B, 3rd STORY, 2nd APARTMENT FROM SOUTH AT WEST",
+      "className": "B"
+    },
+    {
+      "date": "2026-04-13",
+      "source": "HPD_VIOLATION",
+      "category": "structural",
+      "status": "closed",
+      "description": "PROPERLY REPAIR WITH SIMILAR MATERIAL THE BROKEN OR DEFECTIVE VINYL FLOOR TILES IN THE KITCHEN LOCATED AT APT 3B, 3rd STORY, 2nd APARTMENT FROM SOUTH AT WEST",
+      "className": "B"
     },
     {
       "date": "2026-04-13",
@@ -281,25 +306,9 @@
     {
       "date": "2026-04-13",
       "source": "HPD_VIOLATION",
-      "category": "plumbing",
-      "status": "closed",
-      "description": "REPAIR THE BROKEN OR DEFECTIVE CONNECTION AT DRAINPIPE UNDER SINK IN THE KITCHEN LOCATED AT APT 3B, 3rd STORY, 2nd APARTMENT FROM SOUTH AT WEST",
-      "className": "B"
-    },
-    {
-      "date": "2026-04-13",
-      "source": "HPD_VIOLATION",
       "category": "structural",
       "status": "closed",
       "description": "REPAIR THE BROKEN OR DEFECTIVE PLASTERED SURFACES AND PAINT IN A UNIFORM COLOR AT CEILING AND EAST WALL IN THE BATHROOM LOCATED AT APT 3B, 3rd STORY, 2nd APARTMENT FROM SOUTH AT WEST",
-      "className": "B"
-    },
-    {
-      "date": "2026-04-13",
-      "source": "HPD_VIOLATION",
-      "category": "structural",
-      "status": "closed",
-      "description": "PROPERLY REPAIR WITH SIMILAR MATERIAL THE BROKEN OR DEFECTIVE VINYL FLOOR TILES IN THE KITCHEN LOCATED AT APT 3B, 3rd STORY, 2nd APARTMENT FROM SOUTH AT WEST",
       "className": "B"
     },
     {
@@ -313,9 +322,9 @@
     {
       "date": "2026-04-08",
       "source": "HPD_COMPLAINT",
-      "category": "pests",
+      "category": "plumbing",
       "status": "closed",
-      "description": "Unsanitary Condition",
+      "description": "Water Leak — At Wall Or Ceiling",
       "className": null
     },
     {
@@ -353,22 +362,6 @@
     {
       "date": "2026-03-03",
       "source": "HPD_VIOLATION",
-      "category": "plumbing",
-      "status": "closed",
-      "description": ", 2027 HMC: PROPERLY REPAIR THE SOURCE AND ABATE THE EVIDENCE OF A WATER LEAK AT SOUTH WALL IN THE 5th ROOM FROM EAST AT NORTH LOCATED AT APT 6B, 6th STORY, 2nd APARTMENT FROM SOUTH AT WEST , SECTION AT SOUTH",
-      "className": "A"
-    },
-    {
-      "date": "2026-03-03",
-      "source": "HPD_VIOLATION",
-      "category": "plumbing",
-      "status": "closed",
-      "description": "REPAIR THE ROOF SO THAT IT WILL NOT LEAK OVER CEILING IN THE 5th ROOM FROM EAST AT NORTH LOCATED AT APT 6B, 6th STORY, 2nd APARTMENT FROM SOUTH AT WEST , SECTION AT SOUTH",
-      "className": "B"
-    },
-    {
-      "date": "2026-03-03",
-      "source": "HPD_VIOLATION",
       "category": "structural",
       "status": "closed",
       "description": "PAINT WITH LIGHT COLORED PAINT TO THE SATISFACTION OF THIS DEPARTMENT ALL PEELING PAINT SURFACES IN THE 2nd ROOM FROM EAST LOCATED AT APT 6B, 6th STORY, 2nd APARTMENT FROM SOUTH AT WEST , SECTION AT SOUTH",
@@ -377,10 +370,18 @@
     {
       "date": "2026-03-03",
       "source": "HPD_VIOLATION",
+      "category": "structural",
+      "status": "closed",
+      "description": "PAINT WITH LIGHT COLORED PAINT TO THE SATISFACTION OF THIS DEPARTMENT ALL PEELING PAINT SURFACES IN THE 5th ROOM FROM EAST AT NORTH, THE FOYER LOCATED AT APT 6B, 6th STORY, 2nd APARTMENT FROM SOUTH AT WEST , SECTION AT SOUTH",
+      "className": "A"
+    },
+    {
+      "date": "2026-03-03",
+      "source": "HPD_VIOLATION",
       "category": "plumbing",
       "status": "closed",
-      "description": "HMC: PROPERLY REPAIR OR REPLACE THE BROKEN OR DEFECTIVE BASE CABINET AT SINK IN THE KITCHEN LOCATED AT APT 6B, 6th STORY, 2nd APARTMENT FROM SOUTH AT WEST , SECTION AT SOUTH",
-      "className": "B"
+      "description": ", 2027 HMC: PROPERLY REPAIR THE SOURCE AND ABATE THE EVIDENCE OF A WATER LEAK AT SOUTH WALL IN THE 5th ROOM FROM EAST AT NORTH LOCATED AT APT 6B, 6th STORY, 2nd APARTMENT FROM SOUTH AT WEST , SECTION AT SOUTH",
+      "className": "A"
     },
     {
       "date": "2026-03-03",
@@ -395,7 +396,7 @@
       "source": "HPD_VIOLATION",
       "category": "structural",
       "status": "closed",
-      "description": "REPAIR THE BROKEN OR DEFECTIVE PLASTERED SURFACES AND PAINT IN A UNIFORM COLOR AT CEILING, AND AT CEILING IN CLOSET IN THE 5th ROOM FROM EAST AT NORTH LOCATED AT APT 6B, 6th STORY, 2nd APARTMENT FROM SOUTH AT WEST , SECTION AT SOUTH",
+      "description": "REPAIR THE BROKEN OR DEFECTIVE PLASTERED SURFACES AND PAINT IN A UNIFORM COLOR AT NORTH WALL, AND AT CEILING IN THE FOYER LOCATED AT APT 6B, 6th STORY, 2nd APARTMENT FROM SOUTH AT WEST , SECTION AT SOUTH",
       "className": "A"
     },
     {
@@ -403,8 +404,90 @@
       "source": "HPD_VIOLATION",
       "category": "structural",
       "status": "closed",
-      "description": "REPAIR THE BROKEN OR DEFECTIVE PLASTERED SURFACES AND PAINT IN A UNIFORM COLOR AT NORTH WALL, AND AT CEILING IN THE FOYER LOCATED AT APT 6B, 6th STORY, 2nd APARTMENT FROM SOUTH AT WEST , SECTION AT SOUTH",
+      "description": "REPAIR THE BROKEN OR DEFECTIVE PLASTERED SURFACES AND PAINT IN A UNIFORM COLOR AT CEILING, AND AT CEILING IN CLOSET IN THE 5th ROOM FROM EAST AT NORTH LOCATED AT APT 6B, 6th STORY, 2nd APARTMENT FROM SOUTH AT WEST , SECTION AT SOUTH",
       "className": "A"
+    }
+  ],
+  "scoreBreakdown": {
+    "start": 100,
+    "classCCount": 76,
+    "classCPenalty": 40,
+    "classBCount": 25,
+    "classBPenalty": 20,
+    "complaintCount": 74,
+    "complaintPenaltyBeforeScaling": 25,
+    "unitScaleFactor": 0.16666666666666666,
+    "complaintPenalty": 4.166666666666666,
+    "bedbugReported": false,
+    "bedbugPenalty": 0,
+    "openViolations": 122,
+    "cleanBonus": 0,
+    "rawTotal": 35.833333333333336,
+    "finalScore": 36
+  },
+  "patterns": [
+    {
+      "key": "recurring_heat_hot_water",
+      "label": "Recurring heat & hot water issues",
+      "description": "21 heat & hot water complaints filed in the last 24 months.",
+      "severity": "high",
+      "category": "heat_hot_water",
+      "statusFilter": null,
+      "classFilter": null
+    },
+    {
+      "key": "recurring_plumbing",
+      "label": "Recurring plumbing & leaks issues",
+      "description": "39 plumbing & leaks complaints filed in the last 24 months.",
+      "severity": "high",
+      "category": "plumbing",
+      "statusFilter": null,
+      "classFilter": null
+    },
+    {
+      "key": "recurring_pests",
+      "label": "Recurring pests & vermin issues",
+      "description": "18 pests & vermin complaints filed in the last 24 months.",
+      "severity": "high",
+      "category": "pests",
+      "statusFilter": null,
+      "classFilter": null
+    },
+    {
+      "key": "recurring_structural",
+      "label": "Recurring structural & surfaces issues",
+      "description": "36 structural & surfaces complaints filed in the last 24 months.",
+      "severity": "high",
+      "category": "structural",
+      "statusFilter": null,
+      "classFilter": null
+    },
+    {
+      "key": "recurring_safety",
+      "label": "Recurring fire & safety issues",
+      "description": "14 open fire & safety violations on record.",
+      "severity": "high",
+      "category": "safety",
+      "statusFilter": null,
+      "classFilter": null
+    },
+    {
+      "key": "unresolved_class_c",
+      "label": "Unresolved immediately-hazardous violations",
+      "description": "76 open class C violations — the city's most serious tier — still unresolved.",
+      "severity": "high",
+      "category": null,
+      "statusFilter": "open",
+      "classFilter": "C"
+    },
+    {
+      "key": "long_unresolved_backlog",
+      "label": "Violations left unresolved for over a year",
+      "description": "85 open violations were issued more than a year ago and are still open.",
+      "severity": "high",
+      "category": null,
+      "statusFilter": "open",
+      "classFilter": null
     }
   ],
   "bedbug": {
@@ -413,7 +496,7 @@
     "year": null
   },
   "narrative": null,
-  "dataAsOf": "2026-08-15T20:19:53.406Z",
+  "dataAsOf": "2026-08-16T17:19:20.452Z",
   "dataQuality": {
     "unitCountKnown": true,
     "matchedBin": true,

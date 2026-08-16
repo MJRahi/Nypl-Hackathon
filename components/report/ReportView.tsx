@@ -1,16 +1,18 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import type { BuildingReport, ErrorCode } from '@/lib/types';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { BuildingReport, ErrorCode, Pattern } from '@/lib/types';
 import { VerdictHeader } from '@/components/report/VerdictHeader';
 import { StatTiles } from '@/components/report/StatTiles';
 import { CategoryBreakdown } from '@/components/report/CategoryBreakdown';
+import { PatternsSection } from '@/components/report/PatternsSection';
 import { Timeline } from '@/components/report/Timeline';
 import { RawRecords } from '@/components/report/RawRecords';
 import { NarrativeSection } from '@/components/report/NarrativeSection';
 import { Caveats } from '@/components/report/Caveats';
 import { ReportSkeleton } from '@/components/report/ReportSkeleton';
 import { NoRecordsState, RetryState } from '@/components/report/ReportStates';
+import { MetricDrawer, type DrawerRequest } from '@/components/report/MetricDrawer';
 import { Section } from '@/components/ui/Section';
 
 type State =
@@ -63,11 +65,32 @@ interface ReportViewProps {
 export function ReportView({ bbl }: ReportViewProps) {
   const [state, setState] = useState<State>({ kind: 'loading' });
   const [attempt, setAttempt] = useState(0);
+  const [drawerRequest, setDrawerRequest] = useState<DrawerRequest | null>(null);
+  const drawerToken = useRef(0);
 
   const retry = useCallback(() => {
     setState({ kind: 'loading' });
     setAttempt((value) => value + 1);
   }, []);
+
+  const openDrawer = useCallback((request: Omit<DrawerRequest, 'token'>) => {
+    drawerToken.current += 1;
+    setDrawerRequest({ ...request, token: drawerToken.current });
+  }, []);
+
+  const openDrawerForPattern = useCallback(
+    (pattern: Pattern) => {
+      openDrawer({
+        title: pattern.label,
+        source: null,
+        category: pattern.category,
+        statusFilter: pattern.statusFilter,
+        classFilter: pattern.classFilter,
+        within24mo: false,
+      });
+    },
+    [openDrawer],
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -136,19 +159,29 @@ export function ReportView({ bbl }: ReportViewProps) {
       {/* Hard data first, interpretation last. That ordering is the product. */}
       <VerdictHeader report={report} />
 
-      <Section title="The numbers" caption="Straight from the city's records for this address.">
-        <StatTiles report={report} />
+      <Section
+        title="The numbers"
+        caption="Straight from the city's records for this address. Tap any figure to see the real records behind it."
+      >
+        <StatTiles report={report} onOpenDrawer={openDrawer} />
       </Section>
 
       <Section
         title="What the complaints are about"
         caption="Most serious first. The large number is the last 24 months. One complaint can raise several issues at once, so these add up to more than the building's complaint total."
       >
-        <CategoryBreakdown categories={report.categories} />
+        <CategoryBreakdown categories={report.categories} onOpenDrawer={openDrawer} />
       </Section>
 
       <Section
-        title="History"
+        title="Patterns detected"
+        caption="Deterministic, not AI-generated — computed from the same records below."
+      >
+        <PatternsSection patterns={report.patterns} onViewRecords={openDrawerForPattern} />
+      </Section>
+
+      <Section
+        title="Building History"
         caption="Unresolved items first, then newest. Up to the 40 most recent records."
       >
         <Timeline timeline={report.timeline} categories={report.categories} />
@@ -161,6 +194,14 @@ export function ReportView({ bbl }: ReportViewProps) {
       <NarrativeSection report={report} />
 
       <Caveats report={report} />
+
+      <MetricDrawer
+        request={drawerRequest}
+        onClose={() => setDrawerRequest(null)}
+        bbl={report.bbl}
+        dataAsOf={report.dataAsOf}
+        categories={report.categories}
+      />
     </article>
   );
 }

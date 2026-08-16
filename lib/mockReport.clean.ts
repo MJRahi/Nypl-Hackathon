@@ -1,4 +1,5 @@
-import type { BuildingReport } from '@/lib/types';
+import type { BuildingReport, RecordDetail } from '@/lib/types';
+import { DATASETS, datasetUrl } from '@/lib/nyc/datasets';
 
 /**
  * Demo fixture: a well-maintained Upper East Side elevator building.
@@ -29,6 +30,7 @@ export const mockReportClean: BuildingReport = {
     openViolations: 0,
     closedViolations: 12,
     classCViolations: 0,
+    classBViolations: 0,
     dobComplaints24mo: 0,
     complaintsPerUnitPerYear: 0.02,
     cityMedianPerUnitPerYear: 0.28,
@@ -165,6 +167,26 @@ export const mockReportClean: BuildingReport = {
       className: null,
     },
   ],
+  scoreBreakdown: {
+    start: 100,
+    classCCount: 0,
+    classCPenalty: 0,
+    classBCount: 0,
+    classBPenalty: 0,
+    complaintCount: 2,
+    complaintPenaltyBeforeScaling: 2,
+    unitScaleFactor: 0.25,
+    complaintPenalty: 0.5,
+    bedbugReported: false,
+    bedbugPenalty: 0,
+    openViolations: 0,
+    cleanBonus: 10,
+    rawTotal: 109.5,
+    finalScore: 100,
+  },
+  // Deliberately empty — nothing in this building's record crosses any
+  // pattern threshold. A clean building is the honest-empty-state test case.
+  patterns: [],
   bedbug: { reported: false, infestedUnits: null, year: null },
   narrative: null,
   dataAsOf: '2026-08-14T18:00:00.000Z',
@@ -207,3 +229,35 @@ export const mockReportClean: BuildingReport = {
     },
   ],
 };
+
+const SOURCE_DATASET: Record<RecordDetail['source'], { id: string; idField: string }> = {
+  HPD_COMPLAINT: { id: DATASETS.hpdComplaints.id, idField: 'complaint_id' },
+  HPD_VIOLATION: { id: DATASETS.hpdViolations.id, idField: 'violationid' },
+  DOB_COMPLAINT: { id: DATASETS.dobComplaints.id, idField: 'complaint_number' },
+  DOB_VIOLATION: { id: DATASETS.dobViolations.id, idField: 'violation_number' },
+};
+
+function unitFromDescription(description: string): string | null {
+  const match = /apartment\s+([A-Za-z0-9]+)/i.exec(description);
+  return match ? match[1] : null;
+}
+
+/** Shape reference for GET /api/building/records, matching this fixture's timeline. */
+export const mockRecordsClean: RecordDetail[] = mockReportClean.timeline.map((event, index) => {
+  const id = `mock-clean-${index + 1}`;
+  const { id: datasetId, idField } = SOURCE_DATASET[event.source];
+  return {
+    id,
+    date: event.date,
+    source: event.source,
+    category: event.category,
+    status: event.status,
+    className: event.className,
+    description: event.description,
+    unit:
+      event.source === 'HPD_COMPLAINT' || event.source === 'HPD_VIOLATION'
+        ? unitFromDescription(event.description)
+        : null,
+    sourceUrl: `${datasetUrl(datasetId)}?${idField}=${encodeURIComponent(id)}`,
+  };
+});

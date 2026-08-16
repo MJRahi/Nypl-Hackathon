@@ -202,6 +202,7 @@ export interface HpdComplaintRow {
   problem_status?: string;
   space_type?: string;
   type?: string;
+  apartment?: string;
 }
 
 export interface HpdViolationRow {
@@ -355,7 +356,7 @@ export async function fetchHpdComplaints(
     socrataQuery<HpdComplaintRow>(id, {
       $where: where,
       $select:
-        'complaint_id, problem_id, received_date, major_category, minor_category, problem_code, complaint_status, problem_status, space_type, type',
+        'complaint_id, problem_id, received_date, major_category, minor_category, problem_code, complaint_status, problem_status, space_type, type, apartment',
       $order: 'received_date DESC',
       $limit: String(TIMELINE_ROW_LIMIT),
     }),

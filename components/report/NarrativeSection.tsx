@@ -75,7 +75,7 @@ export function NarrativeSection({ report }: { report: BuildingReport }) {
 
   if (state.kind === 'loading') {
     return (
-      <Section title="What this means" caption="Reading the record above.">
+      <Section title="What should a renter know?" caption="Reading the record above.">
         <div className="space-y-3" role="status" aria-label="Loading analysis">
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-11/12" />
@@ -88,7 +88,7 @@ export function NarrativeSection({ report }: { report: BuildingReport }) {
 
   return (
     <Section
-      title="What this means"
+      title="What should a renter know?"
       caption="AI-written summary of the records above. The numbers come from the city data, not the model."
     >
       <div className="space-y-5">

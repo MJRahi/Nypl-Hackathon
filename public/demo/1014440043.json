@@ -15,6 +15,7 @@
     "openViolations": 0,
     "closedViolations": 0,
     "classCViolations": 0,
+    "classBViolations": 0,
     "dobComplaints24mo": 0,
     "complaintsPerUnitPerYear": 0,
     "cityMedianPerUnitPerYear": 0.28
@@ -135,13 +136,31 @@
       "className": null
     }
   ],
+  "scoreBreakdown": {
+    "start": 100,
+    "classCCount": 0,
+    "classCPenalty": 0,
+    "classBCount": 0,
+    "classBPenalty": 0,
+    "complaintCount": 0,
+    "complaintPenaltyBeforeScaling": 0,
+    "unitScaleFactor": 0.08888888888888889,
+    "complaintPenalty": 0,
+    "bedbugReported": false,
+    "bedbugPenalty": 0,
+    "openViolations": 0,
+    "cleanBonus": 10,
+    "rawTotal": 110,
+    "finalScore": 100
+  },
+  "patterns": [],
   "bedbug": {
     "reported": false,
     "infestedUnits": null,
     "year": null
   },
   "narrative": null,
-  "dataAsOf": "2026-08-15T20:19:53.965Z",
+  "dataAsOf": "2026-08-16T17:19:22.544Z",
   "dataQuality": {
     "unitCountKnown": true,
     "matchedBin": true,

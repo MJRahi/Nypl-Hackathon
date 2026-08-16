@@ -1,8 +1,10 @@
 /**
- * Before You Sign NYC — FROZEN CONTRACT.
+ * Before You Sign NYC — type contract.
  *
- * Do not change, add, rename, or remove anything in this file.
- * Three lanes build against it in parallel. Comments may be edited; shapes may not.
+ * Originally frozen for three lanes building in parallel; the freeze was
+ * explicitly lifted by the project owner to add the drill-down dashboard
+ * (record-level detail, score breakdown, deterministic patterns). Existing
+ * shapes are still never renamed or removed — only added to.
  */
 
 export type Category =
@@ -77,6 +79,73 @@ export interface MediaAnalysis {
   disclaimer: string;
 }
 
+/**
+ * A single real NYC record backing a metric — fetched on demand via
+ * GET /api/building/records, never embedded in BuildingReport (some
+ * buildings have 1000+ records; the main report payload stays light).
+ */
+export interface RecordDetail {
+  /** The dataset's own ID column (violationid, complaint_id, complaint_number, violation_number). */
+  id: string;
+  /** ISO date, 'YYYY-MM-DD'. */
+  date: string;
+  source: 'HPD_COMPLAINT' | 'HPD_VIOLATION' | 'DOB_COMPLAINT' | 'DOB_VIOLATION';
+  category: Category;
+  status: 'open' | 'closed';
+  /** HPD violation class 'A' | 'B' | 'C'. null for complaints and DOB violations. */
+  className: string | null;
+  description: string;
+  /** Apartment/unit, when the source dataset actually carries one. Never guessed. */
+  unit: string | null;
+  /** A live Socrata equality-filter URL returning exactly this record. */
+  sourceUrl: string;
+}
+
+/**
+ * Every term of the frozen score formula, exposed rather than discarded, so
+ * "Why this score?" shows exactly what was computed — never a re-derived
+ * approximation.
+ */
+export interface ScoreBreakdown {
+  start: number;
+  classCCount: number;
+  classCPenalty: number;
+  classBCount: number;
+  classBPenalty: number;
+  /** hpdComplaints24mo, before the cap. */
+  complaintCount: number;
+  /** After the cap (25), before per-unit scaling. */
+  complaintPenaltyBeforeScaling: number;
+  /** 12 / max(unitCount, 4). null when unitCount is unknown — no scaling applied. */
+  unitScaleFactor: number | null;
+  /** After scaling — the amount actually subtracted. */
+  complaintPenalty: number;
+  bedbugReported: boolean;
+  bedbugPenalty: number;
+  openViolations: number;
+  cleanBonus: number;
+  /** Before clamping to 0-100. */
+  rawTotal: number;
+  /** After clamping — equals BuildingReport.score. */
+  finalScore: number;
+}
+
+/**
+ * A deterministically-detected pattern — plain-language template filled with
+ * real numbers already computed elsewhere. Never AI-generated. "View
+ * records" applies this filter spec against a fresh /api/building/records
+ * fetch, so there is no separate list of record IDs to keep in sync.
+ */
+export interface Pattern {
+  key: string;
+  label: string;
+  description: string;
+  severity: Severity;
+  category: Category | null;
+  statusFilter: 'open' | 'closed' | null;
+  classFilter: 'A' | 'B' | 'C' | null;
+}
+
 export interface BuildingReport {
   address: string;
   bbl: string;
@@ -96,6 +165,8 @@ export interface BuildingReport {
     closedViolations: number;
     /** Open HPD violations of class C (immediately hazardous). */
     classCViolations: number;
+    /** Open HPD violations of class B. */
+    classBViolations: number;
     dobComplaints24mo: number;
     /** hpdComplaints24mo / unitCount / 2. null when unitCount is unknown. */
     complaintsPerUnitPerYear: number | null;
@@ -104,6 +175,10 @@ export interface BuildingReport {
   categories: CategoryStat[];
   /** Newest 40, descending by date. */
   timeline: TimelineEvent[];
+  /** Every term of the score formula. finalScore always equals `score` above. */
+  scoreBreakdown: ScoreBreakdown;
+  /** Deterministically detected, not AI-generated. May be empty. */
+  patterns: Pattern[];
   bedbug: { reported: boolean; infestedUnits: number | null; year: number | null };
   narrative: { summary: string; redFlags: string[]; questionsToAsk: string[] } | null;
   /** ISO timestamp of the data pull. */

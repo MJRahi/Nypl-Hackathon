@@ -71,6 +71,19 @@ function check(report: BuildingReport): string[] {
   if (report.sources.length === 0) {
     problems.push('no sources listed');
   }
+  if (report.scoreBreakdown.finalScore !== report.score) {
+    problems.push(
+      `scoreBreakdown.finalScore (${report.scoreBreakdown.finalScore}) !== report.score (${report.score})`,
+    );
+  }
+  if (report.stats.classBViolations < 0 || report.stats.classCViolations < 0) {
+    problems.push('classBViolations or classCViolations is negative');
+  }
+  for (const pattern of report.patterns) {
+    if (!pattern.label.trim() || !pattern.description.trim()) {
+      problems.push(`pattern "${pattern.key}" has an empty label or description`);
+    }
+  }
   return problems;
 }
 

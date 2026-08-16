@@ -15,6 +15,7 @@
     "openViolations": 24,
     "closedViolations": 11,
     "classCViolations": 3,
+    "classBViolations": 1,
     "dobComplaints24mo": 1,
     "complaintsPerUnitPerYear": 0,
     "cityMedianPerUnitPerYear": 0.28
@@ -351,13 +352,95 @@
       "className": null
     }
   ],
+  "scoreBreakdown": {
+    "start": 100,
+    "classCCount": 3,
+    "classCPenalty": 36,
+    "classBCount": 1,
+    "classBPenalty": 4,
+    "complaintCount": 0,
+    "complaintPenaltyBeforeScaling": 0,
+    "unitScaleFactor": 3,
+    "complaintPenalty": 0,
+    "bedbugReported": false,
+    "bedbugPenalty": 0,
+    "openViolations": 24,
+    "cleanBonus": 0,
+    "rawTotal": 60,
+    "finalScore": 60
+  },
+  "patterns": [
+    {
+      "key": "recurring_plumbing",
+      "label": "Recurring plumbing & leaks issues",
+      "description": "2 open plumbing & leaks violations on record.",
+      "severity": "medium",
+      "category": "plumbing",
+      "statusFilter": null,
+      "classFilter": null
+    },
+    {
+      "key": "recurring_pests",
+      "label": "Recurring pests & vermin issues",
+      "description": "6 open pests & vermin violations on record.",
+      "severity": "high",
+      "category": "pests",
+      "statusFilter": null,
+      "classFilter": null
+    },
+    {
+      "key": "recurring_structural",
+      "label": "Recurring structural & surfaces issues",
+      "description": "8 open structural & surfaces violations on record.",
+      "severity": "high",
+      "category": "structural",
+      "statusFilter": null,
+      "classFilter": null
+    },
+    {
+      "key": "recurring_safety",
+      "label": "Recurring fire & safety issues",
+      "description": "2 open fire & safety violations on record.",
+      "severity": "medium",
+      "category": "safety",
+      "statusFilter": null,
+      "classFilter": null
+    },
+    {
+      "key": "unresolved_class_c",
+      "label": "Unresolved immediately-hazardous violations",
+      "description": "3 open class C violations — the city's most serious tier — still unresolved.",
+      "severity": "high",
+      "category": null,
+      "statusFilter": "open",
+      "classFilter": "C"
+    },
+    {
+      "key": "seasonal_heat",
+      "label": "Heat outages recur every heating season",
+      "description": "Heat or hot water complaints were filed in 3 different heating seasons on record.",
+      "severity": "high",
+      "category": "heat_hot_water",
+      "statusFilter": null,
+      "classFilter": null
+    },
+    {
+      "key": "long_unresolved_backlog",
+      "label": "Violations left unresolved for over a year",
+      "description": "22 open violations were issued more than a year ago and are still open.",
+      "severity": "high",
+      "category": null,
+      "statusFilter": "open",
+      "classFilter": null
+    }
+  ],
   "bedbug": {
     "reported": false,
     "infestedUnits": null,
     "year": null
   },
   "narrative": null,
-  "dataAsOf": "2026-08-15T20:30:39.422Z",
+  "dataAsOf": "2026-08-16T17:19:21.977Z",
   "dataQuality": {
     "unitCountKnown": true,
     "matchedBin": true,

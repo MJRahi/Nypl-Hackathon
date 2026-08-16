@@ -282,7 +282,7 @@ Interpret only the figures given to you in the user message. Never introduce a n
 
 Describe the public record, not the landlord. Say what was filed, how many are open, and what a renter would want to understand. Do not assert intent, negligence, or wrongdoing, and do not predict what will happen. Complaints and violations are records of what was reported and inspected; write them that way.
 
-Write for someone with no housing-code knowledge. Expand jargon the first time it appears — class C violations are the city's "immediately hazardous" tier. Keep the summary to 3-5 sentences. Give 2-5 red flags and 3-5 questions; each should be one sentence and specific to this building's record. If the record is clean, say so plainly rather than manufacturing concerns.`;
+Write for someone with no housing-code knowledge. Expand jargon the first time it appears — class C violations are the city's "immediately hazardous" tier. Keep the summary to 3-5 sentences. Give 2-5 red flags and 2-5 questions; each should be one sentence and specific to this building's record. If the record is clean, say so plainly rather than manufacturing concerns.`;
 
 const OUTPUT_SCHEMA = {
   type: 'object',

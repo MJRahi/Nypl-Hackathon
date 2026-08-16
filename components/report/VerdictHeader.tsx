@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { BuildingReport } from '@/lib/types';
 import { GRADE_THEME } from '@/components/report/reportFormat';
+import { ScoreExplainer } from '@/components/report/ScoreExplainer';
 import { cn } from '@/components/ui/cn';
 
 /**
@@ -41,6 +42,11 @@ export function VerdictHeader({ report }: { report: BuildingReport }) {
         <p className="sr-only">
           Grade {report.grade}. Score {report.score} out of 100. {theme.descriptor}.
         </p>
+        <ScoreExplainer
+          breakdown={report.scoreBreakdown}
+          score={report.score}
+          className="mt-3 inline-block"
+        />
       </div>
 
       {isClean ? (

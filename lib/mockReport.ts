@@ -1,4 +1,5 @@
-import type { BuildingReport } from '@/lib/types';
+import type { BuildingReport, Pattern, RecordDetail } from '@/lib/types';
+import { DATASETS, datasetUrl } from '@/lib/nyc/datasets';
 
 /**
  * Demo fixture: a bad Bronx walkup. 12 units, 41 lifetime HPD complaints,
@@ -41,6 +42,7 @@ export const mockReport: BuildingReport = {
     openViolations: 11,
     closedViolations: 63,
     classCViolations: 2,
+    classBViolations: 2,
     dobComplaints24mo: 3,
     complaintsPerUnitPerYear: 0.58,
     cityMedianPerUnitPerYear: 0.28,
@@ -433,6 +435,79 @@ export const mockReport: BuildingReport = {
       className: null,
     },
   ],
+  scoreBreakdown: {
+    start: 100,
+    classCCount: 2,
+    classCPenalty: 24,
+    classBCount: 2,
+    classBPenalty: 8,
+    complaintCount: 14,
+    complaintPenaltyBeforeScaling: 14,
+    unitScaleFactor: 1,
+    complaintPenalty: 14,
+    bedbugReported: true,
+    bedbugPenalty: 10,
+    openViolations: 11,
+    cleanBonus: 0,
+    rawTotal: 44,
+    finalScore: 44,
+  },
+  patterns: [
+    {
+      key: 'recurring_heat_hot_water',
+      label: 'Recurring heat & hot water issues',
+      description: '6 heat & hot water complaints filed in the last 24 months.',
+      severity: 'high',
+      category: 'heat_hot_water',
+      statusFilter: null,
+      classFilter: null,
+    },
+    {
+      key: 'recurring_plumbing',
+      label: 'Recurring plumbing & leaks issues',
+      description: '5 plumbing & leaks complaints filed in the last 24 months.',
+      severity: 'high',
+      category: 'plumbing',
+      statusFilter: null,
+      classFilter: null,
+    },
+    {
+      key: 'recurring_pests',
+      label: 'Recurring pests & vermin issues',
+      description: '3 pests & vermin complaints filed in the last 24 months.',
+      severity: 'high',
+      category: 'pests',
+      statusFilter: null,
+      classFilter: null,
+    },
+    {
+      key: 'recurring_structural',
+      label: 'Recurring structural & surfaces issues',
+      description: '3 structural & surfaces complaints filed in the last 24 months.',
+      severity: 'medium',
+      category: 'structural',
+      statusFilter: null,
+      classFilter: null,
+    },
+    {
+      key: 'unresolved_class_c',
+      label: 'Unresolved immediately-hazardous violations',
+      description: "2 open class C violations — the city's most serious tier — still unresolved.",
+      severity: 'high',
+      category: null,
+      statusFilter: 'open',
+      classFilter: 'C',
+    },
+    {
+      key: 'seasonal_heat',
+      label: 'Heat outages recur every heating season',
+      description: 'Heat or hot water complaints were filed in 3 different heating seasons on record.',
+      severity: 'high',
+      category: 'heat_hot_water',
+      statusFilter: null,
+      classFilter: null,
+    },
+  ],
   bedbug: { reported: true, infestedUnits: 3, year: 2026 },
   narrative: null,
   dataAsOf: '2026-08-14T18:00:00.000Z',
@@ -503,3 +578,40 @@ export const mockNarrative: NonNullable<BuildingReport['narrative']> = {
     'Which unit had the recurring ceiling leak, and what repair was done to the line above it?',
   ],
 };
+
+const SOURCE_DATASET: Record<RecordDetail['source'], { id: string; idField: string }> = {
+  HPD_COMPLAINT: { id: DATASETS.hpdComplaints.id, idField: 'complaint_id' },
+  HPD_VIOLATION: { id: DATASETS.hpdViolations.id, idField: 'violationid' },
+  DOB_COMPLAINT: { id: DATASETS.dobComplaints.id, idField: 'complaint_number' },
+  DOB_VIOLATION: { id: DATASETS.dobViolations.id, idField: 'violation_number' },
+};
+
+/** Pulls "apartment 3A" -> "3A" out of the fixture's own description text, rather than inventing unit data. */
+function unitFromDescription(description: string): string | null {
+  const match = /apartment\s+([A-Za-z0-9]+)/i.exec(description);
+  return match ? match[1] : null;
+}
+
+/**
+ * Shape reference for GET /api/building/records. Not attached to the report
+ * — that endpoint is fetched separately from /api/building. Derived from
+ * mockReport.timeline so the two never drift apart; ids and sourceUrls are
+ * synthetic (this whole fixture is hand-authored, not a real BBL).
+ */
+export const mockRecords: RecordDetail[] = mockReport.timeline.map((event, index) => {
+  const id = `mock-${index + 1}`;
+  const { id: datasetId, idField } = SOURCE_DATASET[event.source];
+  return {
+    id,
+    date: event.date,
+    source: event.source,
+    category: event.category,
+    status: event.status,
+    className: event.className,
+    description: event.description,
+    unit: event.source === 'HPD_COMPLAINT' || event.source === 'HPD_VIOLATION'
+      ? unitFromDescription(event.description)
+      : null,
+    sourceUrl: `${datasetUrl(datasetId)}?${idField}=${encodeURIComponent(id)}`,
+  };
+});

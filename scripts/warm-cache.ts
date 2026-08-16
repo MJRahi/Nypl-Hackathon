@@ -21,9 +21,10 @@
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import type { BuildingReport } from '@/lib/types';
+import type { BuildingReport, RecordDetail } from '@/lib/types';
 import { geocodeAddress } from '@/lib/nyc/geocode';
 import { loadBuildingReport } from '@/lib/nyc/report';
+import { loadBuildingRecords } from '@/lib/nyc/records';
 import { generateNarrative, toNarrativeInput } from '@/lib/nyc/narrative';
 
 const DEMO_DIR = path.join(process.cwd(), 'public', 'demo');
@@ -78,6 +79,13 @@ async function writeFixture(report: BuildingReport): Promise<string> {
   return file;
 }
 
+async function writeRecordsFixture(bbl: string, records: RecordDetail[]): Promise<string> {
+  await mkdir(DEMO_DIR, { recursive: true });
+  const file = path.join(DEMO_DIR, `${bbl}.records.json`);
+  await writeFile(file, `${JSON.stringify(records, null, 2)}\n`, 'utf8');
+  return file;
+}
+
 /** Resolve a free-text address to a single BBL, or explain why we can't. */
 async function resolveBbl(address: string): Promise<{ bbl: string; label: string } | null> {
   const candidates = await geocodeAddress(address);
@@ -124,9 +132,19 @@ async function warmOne(
 
   const file = await writeFixture(report);
   console.log(
-    `  ✓ ${report.address}\n    grade ${report.grade} (${report.score}), ${report.stats.openViolations} open violations, ${report.timeline.length} timeline events`,
+    `  ✓ ${report.address}\n    grade ${report.grade} (${report.score}), ${report.stats.openViolations} open violations, ${report.timeline.length} timeline events, ${report.patterns.length} patterns detected`,
   );
   console.log(`    -> ${path.relative(process.cwd(), file)}`);
+
+  try {
+    const records = await loadBuildingRecords(target.bbl);
+    const recordsFile = await writeRecordsFixture(target.bbl, records);
+    console.log(`    ${records.length} records -> ${path.relative(process.cwd(), recordsFile)}`);
+  } catch (cause) {
+    console.warn(
+      `    ! records fixture failed (drawer will fall back to a live fetch): ${cause instanceof Error ? cause.message : cause}`,
+    );
+  }
 
   if (report.dataQuality.warnings.length > 0) {
     for (const warning of report.dataQuality.warnings) console.warn(`    ! ${warning}`);

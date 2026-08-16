@@ -1,4 +1,5 @@
 import type { BuildingReport } from '@/lib/types';
+import type { DrawerRequest } from '@/components/report/MetricDrawer';
 import { ComparisonBar } from '@/components/report/ComparisonBar';
 import { cn } from '@/components/ui/cn';
 
@@ -7,14 +8,25 @@ interface Tile {
   value: number;
   /** Class C is the city's immediately-hazardous tier — it earns emphasis when non-zero. */
   alarming?: boolean;
+  drawer: Omit<DrawerRequest, 'token'>;
 }
 
-function StatTile({ tile, className }: { tile: Tile; className?: string }) {
+function StatTile({
+  tile,
+  className,
+  onOpenDrawer,
+}: {
+  tile: Tile;
+  className?: string;
+  onOpenDrawer: (request: Omit<DrawerRequest, 'token'>) => void;
+}) {
   const hot = Boolean(tile.alarming) && tile.value > 0;
   return (
-    <div
+    <button
+      type="button"
+      onClick={() => onOpenDrawer(tile.drawer)}
       className={cn(
-        'rounded-2xl bg-white p-4 ring-1 ring-inset',
+        'rounded-2xl bg-white p-4 text-left ring-1 ring-inset transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700',
         hot ? 'ring-red-200' : 'ring-slate-200',
         className,
       )}
@@ -28,20 +40,82 @@ function StatTile({ tile, className }: { tile: Tile; className?: string }) {
         {tile.value}
       </p>
       <p className="mt-2 text-xs font-medium leading-snug text-slate-500">{tile.label}</p>
-    </div>
+      <p className="mt-1.5 text-[11px] font-semibold text-blue-700">View details &rarr;</p>
+    </button>
   );
 }
 
-export function StatTiles({ report }: { report: BuildingReport }) {
+interface StatTilesProps {
+  report: BuildingReport;
+  onOpenDrawer: (request: Omit<DrawerRequest, 'token'>) => void;
+}
+
+export function StatTiles({ report, onOpenDrawer }: StatTilesProps) {
   const { stats } = report;
 
   // Exactly the five tiles the spec calls for, in that order.
   const tiles: Tile[] = [
-    { label: 'HPD complaints, all time', value: stats.hpdComplaintsAllTime },
-    { label: 'HPD complaints, last 24 months', value: stats.hpdComplaints24mo },
-    { label: 'Open HPD violations', value: stats.openViolations },
-    { label: 'Open class C — immediately hazardous', value: stats.classCViolations, alarming: true },
-    { label: 'DOB complaints, last 24 months', value: stats.dobComplaints24mo },
+    {
+      label: 'HPD complaints, all time',
+      value: stats.hpdComplaintsAllTime,
+      drawer: {
+        title: 'HPD complaints, all time',
+        source: 'HPD_COMPLAINT',
+        category: null,
+        statusFilter: null,
+        classFilter: null,
+        within24mo: false,
+      },
+    },
+    {
+      label: 'HPD complaints, last 24 months',
+      value: stats.hpdComplaints24mo,
+      drawer: {
+        title: 'HPD complaints, last 24 months',
+        source: 'HPD_COMPLAINT',
+        category: null,
+        statusFilter: null,
+        classFilter: null,
+        within24mo: true,
+      },
+    },
+    {
+      label: 'Open HPD violations',
+      value: stats.openViolations,
+      drawer: {
+        title: 'Open HPD violations',
+        source: 'HPD_VIOLATION',
+        category: null,
+        statusFilter: 'open',
+        classFilter: null,
+        within24mo: false,
+      },
+    },
+    {
+      label: 'Open class C — immediately hazardous',
+      value: stats.classCViolations,
+      alarming: true,
+      drawer: {
+        title: 'Open class C violations',
+        source: 'HPD_VIOLATION',
+        category: null,
+        statusFilter: 'open',
+        classFilter: 'C',
+        within24mo: false,
+      },
+    },
+    {
+      label: 'DOB complaints, last 24 months',
+      value: stats.dobComplaints24mo,
+      drawer: {
+        title: 'DOB complaints, last 24 months',
+        source: 'DOB_COMPLAINT',
+        category: null,
+        statusFilter: null,
+        classFilter: null,
+        within24mo: false,
+      },
+    },
   ];
 
   return (
@@ -51,6 +125,7 @@ export function StatTiles({ report }: { report: BuildingReport }) {
           <StatTile
             key={tile.label}
             tile={tile}
+            onOpenDrawer={onOpenDrawer}
             // An odd count would leave a hole in a 2-up grid; the last tile
             // takes the full row instead of us inventing a sixth stat.
             className={
