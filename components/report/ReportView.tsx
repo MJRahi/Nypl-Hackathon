@@ -134,7 +134,7 @@ export function ReportView({ bbl }: ReportViewProps) {
 
       <Section
         title="What the complaints are about"
-        caption="Most serious categories first. The large number is the last 24 months."
+        caption="Most serious first. The large number is the last 24 months. One complaint can raise several issues at once, so these add up to more than the building's complaint total."
       >
         <CategoryBreakdown categories={report.categories} />
       </Section>
